@@ -32,7 +32,7 @@ const CreateFaqModal = ({ open, faq, onClose, onSave }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/60 px-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
+      <div className="w-full max-w-lg rounded bg-white shadow-xl">
         <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5">
           <div>
             <h2 className="text-lg font-extrabold text-navy-950">
@@ -63,7 +63,7 @@ const CreateFaqModal = ({ open, faq, onClose, onSave }) => {
               value={form.question}
               onChange={(e) => setForm((f) => ({ ...f, question: e.target.value }))}
               placeholder="e.g., How do I reset the main control board?"
-              className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+              className="w-full rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
             />
           </div>
 
@@ -77,7 +77,7 @@ const CreateFaqModal = ({ open, faq, onClose, onSave }) => {
               value={form.answer}
               onChange={(e) => setForm((f) => ({ ...f, answer: e.target.value }))}
               placeholder="Provide step-by-step instructions or policy details here..."
-              className="w-full resize-y rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+              className="w-full resize-y rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
             />
           </div>
 
@@ -88,7 +88,7 @@ const CreateFaqModal = ({ open, faq, onClose, onSave }) => {
             <select
               value={form.product}
               onChange={(e) => setForm((f) => ({ ...f, product: e.target.value }))}
-              className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none focus:border-blue-600"
+              className="w-full rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none focus:border-blue-600"
             >
               {PRODUCT_OPTIONS.map((opt) => (
                 <option key={opt} value={opt}>
@@ -102,13 +102,13 @@ const CreateFaqModal = ({ open, faq, onClose, onSave }) => {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
+              className="rounded border border-slate-200 px-5 py-2.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
+              className="rounded bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
             >
               Save FAQ
             </button>

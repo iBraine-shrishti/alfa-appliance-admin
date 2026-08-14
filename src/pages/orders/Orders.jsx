@@ -101,7 +101,7 @@ const OrderStatCard = ({
     <div
       className="
         w-full
-        rounded-lg
+        rounded
         border
         border-[#E0E0E0]
         bg-white
@@ -204,7 +204,7 @@ const Orders = () => {
           placeholder="Search orders..."
           className="
             w-full
-            rounded-lg
+            rounded
             border
             border-slate-200
             bg-white
@@ -222,7 +222,13 @@ const Orders = () => {
 
       {/* Page Header */}
       <PageHeader
-        title="Orders Management"
+        
+        eyebrow="ORDERS MANAGEMENT"
+        title={
+          <>
+            Global <span className="text-blue-600">Orders</span>
+          </>
+        }
         subtitle="Monitor and manage customer orders and fulfillment."
         actions={
           <>
@@ -232,7 +238,7 @@ const Orders = () => {
                 flex
                 items-center
                 gap-2
-                rounded-lg
+                rounded
                 border
                 border-slate-200
                 bg-white
@@ -254,7 +260,7 @@ const Orders = () => {
                 flex
                 items-center
                 gap-2
-                rounded-lg
+                rounded
                 border
                 border-slate-200
                 bg-white

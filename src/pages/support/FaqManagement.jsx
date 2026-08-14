@@ -65,13 +65,14 @@ const FaqManagement = () => {
     <div className="flex flex-col gap-6">
       <PageHeader
         eyebrow="PRODUCT HELP CENTER"
-        title="Frequently Asked Questions"
+        title={<>Frequently Asked  
+         <span className="text-blue-600"> Questions</span></>}
         subtitle="Manage knowledge base articles and support queries."
         actions={
           <button
             type="button"
             onClick={openCreate}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
+            className="flex items-center gap-2 rounded bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
           >
             <FiPlus size={15} />
             Create FAQ
@@ -79,7 +80,7 @@ const FaqManagement = () => {
         }
       />
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5">
+      <div className="rounded border border-slate-200 bg-white p-5">
         <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="flex items-center gap-1.5 text-sm font-bold text-navy-950">
             <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
@@ -93,7 +94,7 @@ const FaqManagement = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search FAQs..."
-              className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+              className="w-full rounded border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
             />
           </div>
         </div>

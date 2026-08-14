@@ -6,7 +6,7 @@ const STATUS_TONE = { Subscribed: "green", Guest: "slate" };
 
 const CustomersTable = ({ customers, page, totalPages, totalEntries, pageSize, onPageChange }) => {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded border border-slate-200 bg-white">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>

@@ -3,7 +3,7 @@ import RichTextField from "./RichTextField";
 
 const ProductDetailsSection = ({ form, onChange }) => {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6">
+    <div className="rounded border border-slate-200 bg-white p-6">
       <p className="mb-5 flex items-center gap-2 border-b border-slate-100 pb-4 text-sm font-bold text-navy-950">
         <FiInfo size={15} className="text-blue-600" />
         Product Details
@@ -18,7 +18,7 @@ const ProductDetailsSection = ({ form, onChange }) => {
               value={form.title}
               onChange={(e) => onChange("title", e.target.value)}
               placeholder="Enter product title..."
-              className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+              className="w-full rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
             />
           </div>
           <div>
@@ -28,7 +28,7 @@ const ProductDetailsSection = ({ form, onChange }) => {
               value={form.slug}
               readOnly
               placeholder="auto-generated"
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-3 text-sm text-slate-500 outline-none placeholder:text-slate-400"
+              className="w-full rounded border border-slate-200 bg-slate-50 px-3.5 py-3 text-sm text-slate-500 outline-none placeholder:text-slate-400"
             />
           </div>
         </div>

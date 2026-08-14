@@ -13,7 +13,7 @@ const ProductFilters = ({ search, onSearchChange, category, onCategoryChange, st
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search products..."
-          className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+          className="w-full rounded border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
         />
       </div>
 
@@ -21,7 +21,7 @@ const ProductFilters = ({ search, onSearchChange, category, onCategoryChange, st
         <select
           value={category}
           onChange={(e) => onCategoryChange(e.target.value)}
-          className="appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pl-4 pr-9 text-sm font-semibold text-navy-950 outline-none focus:border-blue-600"
+          className="appearance-none rounded border border-slate-200 bg-white py-2.5 pl-4 pr-9 text-sm font-semibold text-navy-950 outline-none focus:border-blue-600"
         >
           <option value="">All Categories</option>
           {applianceCategories.map((c) => (
@@ -37,7 +37,7 @@ const ProductFilters = ({ search, onSearchChange, category, onCategoryChange, st
         <select
           value={status}
           onChange={(e) => onStatusChange(e.target.value)}
-          className="appearance-none rounded-lg border border-slate-200 bg-white py-2.5 pl-4 pr-9 text-sm font-semibold text-navy-950 outline-none focus:border-blue-600"
+          className="appearance-none rounded border border-slate-200 bg-white py-2.5 pl-4 pr-9 text-sm font-semibold text-navy-950 outline-none focus:border-blue-600"
         >
           <option value="">All Status</option>
           {PRODUCT_STATUSES.map((s) => (

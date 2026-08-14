@@ -59,7 +59,7 @@ const FaqTable = ({ faqs, onEdit, onDelete }) => {
         </p>
         <div className="flex items-center gap-2 text-sm text-slate-500">
           Rows per page:
-          <select className="rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-blue-600">
+          <select className="rounded border border-slate-200 px-2 py-1 text-sm outline-none focus:border-blue-600">
             <option>10</option>
             <option>25</option>
             <option>50</option>

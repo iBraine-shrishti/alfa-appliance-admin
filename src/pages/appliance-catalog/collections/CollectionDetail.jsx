@@ -11,7 +11,7 @@ const CollectionDetail = () => {
 
   if (!collection) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-slate-400">
+      <div className="rounded border border-slate-200 bg-white p-8 text-center text-slate-400">
         <p>Collection not found.</p>
         <Link to="/admin/appliance-catalog/collections" className="mt-2 inline-block text-sm font-semibold text-blue-600 hover:underline">
           Back to All Collections
@@ -31,14 +31,14 @@ const CollectionDetail = () => {
         <div className="flex shrink-0 items-center gap-3">
           <button
             type="button"
-            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
+            className="flex items-center gap-2 rounded border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
           >
             <FiDownload size={15} />
             Export CSV
           </button>
           <Link
             to="/admin/appliance-catalog/add-product"
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
+            className="flex items-center gap-2 rounded bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
           >
             <FiPlus size={15} />
             Add Product
@@ -46,7 +46,7 @@ const CollectionDetail = () => {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4">
+      <div className="flex flex-wrap items-center gap-3 rounded border border-slate-200 bg-white px-5 py-4">
         <span className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-slate-400">
           FILTERS:
         </span>
@@ -54,7 +54,7 @@ const CollectionDetail = () => {
           <button
             key={label}
             type="button"
-            className="flex items-center gap-1.5 rounded-lg border border-slate-200 px-3.5 py-1.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
+            className="flex items-center gap-1.5 rounded border border-slate-200 px-3.5 py-1.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
           >
             {label}
             <FiChevronDown size={13} />

@@ -33,7 +33,7 @@ const AdminLayout = () => {
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-navy-950"
+            className="flex h-9 w-9 items-center justify-center rounded border border-slate-200 text-navy-950"
             aria-label="Open menu"
           >
             <FiMenu size={18} />

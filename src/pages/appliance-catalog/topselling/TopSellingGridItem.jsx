@@ -6,7 +6,7 @@ const TopSellingGridItem = ({ spot, product, onMoveUp, onMoveDown, onRemove, onA
       <button
         type="button"
         onClick={onAssign}
-        className="flex min-h-[220px] w-full flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-200 text-slate-400 hover:border-blue-300 hover:text-blue-500"
+        className="flex min-h-[220px] w-full flex-col items-center justify-center gap-2 rounded border-2 border-dashed border-slate-200 text-slate-400 hover:border-blue-300 hover:text-blue-500"
       >
         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100">
           <FiPlus size={18} />
@@ -19,7 +19,7 @@ const TopSellingGridItem = ({ spot, product, onMoveUp, onMoveDown, onRemove, onA
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4">
+    <div className="rounded border border-slate-200 bg-white p-4">
       <div className="mb-3 flex items-center justify-between">
         <span className="rounded bg-slate-100 px-2 py-1 text-[11px] font-bold tracking-wider text-slate-500">
           SPOT #{spot}
@@ -52,7 +52,7 @@ const TopSellingGridItem = ({ spot, product, onMoveUp, onMoveDown, onRemove, onA
         </div>
       </div>
 
-      <div className="flex h-28 items-center justify-center rounded-lg bg-slate-50">
+      <div className="flex h-28 items-center justify-center rounded bg-slate-50">
         <img src={product.image} alt={product.name} className="h-full w-full object-contain p-2" />
       </div>
 

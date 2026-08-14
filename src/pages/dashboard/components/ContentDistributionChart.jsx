@@ -4,7 +4,7 @@ const COLORS = ["#1d4ed8", "#60a5fa", "#bfdbfe", "#e0e7ff"];
 
 const ContentDistributionChart = ({ items, total, totalLabel = "TOTAL ITEMS" }) => {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6">
+    <div className="rounded border border-slate-200 bg-white p-6">
       <p className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-slate-400">
         <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
         CONTENT DISTRIBUTION

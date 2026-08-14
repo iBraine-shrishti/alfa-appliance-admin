@@ -23,7 +23,7 @@ const Pagination = ({
           type="button"
           onClick={() => onPageChange(Math.max(1, page - 1))}
           disabled={page === 1}
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 disabled:opacity-40 hover:bg-slate-50"
+          className="flex h-8 w-8 items-center justify-center rounded border border-slate-200 text-slate-500 disabled:opacity-40 hover:bg-slate-50"
         >
           <FiChevronLeft size={15} />
         </button>
@@ -33,7 +33,7 @@ const Pagination = ({
             key={n}
             type="button"
             onClick={() => onPageChange(n)}
-            className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm font-semibold ${
+            className={`flex h-8 w-8 items-center justify-center rounded text-sm font-semibold ${
               n === page
                 ? "bg-blue-600 text-white"
                 : "border border-slate-200 text-slate-500 hover:bg-slate-50"
@@ -49,7 +49,7 @@ const Pagination = ({
           type="button"
           onClick={() => onPageChange(Math.min(totalPages, page + 1))}
           disabled={page === totalPages}
-          className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 disabled:opacity-40 hover:bg-slate-50"
+          className="flex h-8 w-8 items-center justify-center rounded border border-slate-200 text-slate-500 disabled:opacity-40 hover:bg-slate-50"
         >
           <FiChevronRight size={15} />
         </button>

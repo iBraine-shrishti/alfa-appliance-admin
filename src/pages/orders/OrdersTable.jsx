@@ -11,7 +11,7 @@ const FULFILLMENT_TONE = {
 
 const OrdersTable = ({ orders, page, totalPages, totalEntries, pageSize, onPageChange }) => {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded border border-slate-200 bg-white">
       <div className="flex items-center justify-between bg-navy-950 px-5 py-3.5">
         <p className="text-sm font-bold text-white">Recent Orders</p>
       </div>

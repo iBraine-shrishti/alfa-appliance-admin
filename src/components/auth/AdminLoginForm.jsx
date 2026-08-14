@@ -21,7 +21,7 @@ const AdminLoginForm = () => {
           type="email"
           required
           placeholder="technician@alfa.com"
-          className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+          className="w-full rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
         />
       </div>
 
@@ -39,13 +39,13 @@ const AdminLoginForm = () => {
           type="password"
           required
           placeholder="••••••••"
-          className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+          className="w-full rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
         />
       </div>
 
       <button
         type="submit"
-        className="mt-1 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3.5 text-sm font-bold text-white transition-colors hover:bg-blue-500"
+        className="mt-1 flex w-full items-center justify-center gap-2 rounded bg-blue-600 py-3.5 text-sm font-bold text-white transition-colors hover:bg-blue-500"
       >
         Sign In
         <FiArrowRight size={16} />

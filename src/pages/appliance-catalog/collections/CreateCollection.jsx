@@ -22,7 +22,7 @@ const CreateCollection = () => {
           <button
             type="button"
             onClick={() => navigate("/admin/appliance-catalog/collections")}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
+            className="flex h-9 w-9 items-center justify-center rounded border border-slate-200 text-slate-500 hover:bg-slate-50"
             aria-label="Back"
           >
             <FiArrowLeft size={16} />
@@ -40,14 +40,14 @@ const CreateCollection = () => {
           <button
             type="button"
             onClick={() => navigate("/admin/appliance-catalog/collections")}
-            className="rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
+            className="rounded border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={handleSave}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
+            className="flex items-center gap-2 rounded bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
           >
             <FiSave size={15} />
             Save Collection
@@ -56,7 +56,7 @@ const CreateCollection = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 lg:col-span-2">
+        <div className="rounded border border-slate-200 bg-white p-6 lg:col-span-2">
           <p className="mb-5 flex items-center gap-2 border-b border-slate-100 pb-4 text-sm font-bold text-navy-950">
             <FiLayers size={15} className="text-blue-600" />
             Collection Details
@@ -70,7 +70,7 @@ const CreateCollection = () => {
                 value={form.title}
                 onChange={(e) => updateField("title", e.target.value)}
                 placeholder="e.g., Energy Efficient Cooling"
-                className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+                className="w-full rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
               />
             </div>
 
@@ -82,7 +82,7 @@ const CreateCollection = () => {
                 <select
                   value={form.category}
                   onChange={(e) => updateField("category", e.target.value)}
-                  className="w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none focus:border-blue-600"
+                  className="w-full appearance-none rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none focus:border-blue-600"
                 >
                   {applianceCategories.map((c) => (
                     <option key={c} value={c}>
@@ -99,14 +99,14 @@ const CreateCollection = () => {
                 <FiImage size={13} />
                 Collection Image
               </label>
-              <div className="flex items-center gap-4 rounded-lg border border-slate-200 p-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-dashed border-slate-200 text-slate-300">
+              <div className="flex items-center gap-4 rounded border border-slate-200 p-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded border border-dashed border-slate-200 text-slate-300">
                   <FiImage size={20} />
                 </div>
                 <div>
                   <button
                     type="button"
-                    className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-bold tracking-wider text-navy-950 hover:bg-slate-50"
+                    className="rounded border border-slate-200 px-4 py-2 text-xs font-bold tracking-wider text-navy-950 hover:bg-slate-50"
                   >
                     CHOOSE IMAGE FILE
                   </button>
@@ -122,13 +122,13 @@ const CreateCollection = () => {
                 value={form.description}
                 onChange={(e) => updateField("description", e.target.value)}
                 placeholder="Enter collection description..."
-                className="w-full resize-y rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+                className="w-full resize-y rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
               />
             </div>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="rounded border border-slate-200 bg-white p-6">
           <p className="mb-5 text-sm font-bold text-navy-950">Products in Collection</p>
 
           <div className="relative mb-4">
@@ -136,7 +136,7 @@ const CreateCollection = () => {
             <input
               type="text"
               placeholder="Search products..."
-              className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+              className="w-full rounded border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
             />
           </div>
 
@@ -146,7 +146,7 @@ const CreateCollection = () => {
 
           <button
             type="button"
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
+            className="flex w-full items-center justify-center gap-2 rounded bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
           >
             <FiExternalLink size={15} />
             See Collection

@@ -9,7 +9,7 @@ const AdminAuth = () => {
       <AdminHero />
 
       <div className="flex flex-1 items-center justify-center px-4 py-10 sm:px-8">
-        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div className="w-full max-w-md rounded border border-slate-200 bg-white p-8 shadow-sm">
           <div className="mb-6 flex justify-center">
             {/* <span className="text-2xl font-extrabold tracking-tight text-navy-950">
               ALFA

@@ -6,7 +6,7 @@ const STATUS_TONE = { "On Sale": "blue", Active: "slate" };
 
 const ProductsTable = ({ products, page, totalPages, totalEntries, pageSize, onPageChange }) => {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded border border-slate-200 bg-white">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>

@@ -4,7 +4,7 @@ import { productCollectionOptions } from "../../../data/productCollectionOptions
 
 const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6">
+    <div className="rounded border border-slate-200 bg-white p-6">
       <p className="mb-5 text-sm font-bold text-navy-950">Organization</p>
 
       <div className="flex flex-col gap-5">
@@ -14,7 +14,7 @@ const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
             <select
               value={form.category}
               onChange={(e) => onChange("category", e.target.value)}
-              className="w-full appearance-none rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none focus:border-blue-600"
+              className="w-full appearance-none rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none focus:border-blue-600"
             >
               {applianceCategories.map((c) => (
                 <option key={c} value={c}>
@@ -28,7 +28,7 @@ const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
 
         <div>
           <label className="mb-2 block text-xs font-bold tracking-wider text-slate-500">Collections</label>
-          <div className="flex flex-col gap-2 rounded-lg border border-slate-200 p-3">
+          <div className="flex flex-col gap-2 rounded border border-slate-200 p-3">
             {productCollectionOptions.map((option) => (
               <label key={option} className="flex items-center gap-2 text-sm text-navy-950">
                 <input
@@ -50,7 +50,7 @@ const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
             value={form.weight}
             onChange={(e) => onChange("weight", e.target.value)}
             placeholder="e.g. 85kg"
-            className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+            className="w-full rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
           />
         </div>
 

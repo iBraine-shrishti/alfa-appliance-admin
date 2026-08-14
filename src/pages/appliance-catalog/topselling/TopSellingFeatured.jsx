@@ -1,7 +1,7 @@
 const TopSellingFeatured = ({ product, onEdit }) => {
   if (!product) {
     return (
-      <div className="flex h-full min-h-[420px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 text-center text-slate-400">
+      <div className="flex h-full min-h-[420px] flex-col items-center justify-center rounded border-2 border-dashed border-slate-200 text-center text-slate-400">
         <p className="text-sm font-semibold">No product assigned</p>
         <p className="text-xs">Assign a product to the featured spot</p>
       </div>
@@ -9,7 +9,7 @@ const TopSellingFeatured = ({ product, onEdit }) => {
   }
 
   return (
-    <div className="relative flex h-full min-h-[420px] flex-col justify-end overflow-hidden rounded-2xl bg-navy-950">
+    <div className="relative flex h-full min-h-[420px] flex-col justify-end overflow-hidden rounded bg-navy-950">
       <span className="absolute left-4 top-4 rounded-full bg-blue-600 px-3 py-1 text-xs font-bold text-white">
         Featured Spot
       </span>
@@ -26,7 +26,7 @@ const TopSellingFeatured = ({ product, onEdit }) => {
         <button
           type="button"
           onClick={onEdit}
-          className="mt-3 rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20"
+          className="mt-3 rounded bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20"
         >
           Edit Details
         </button>

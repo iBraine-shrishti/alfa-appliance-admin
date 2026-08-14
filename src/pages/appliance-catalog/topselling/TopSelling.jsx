@@ -46,14 +46,19 @@ const TopSelling = () => {
     <div className="flex flex-col gap-6 pb-20">
       <PageHeader
         eyebrow="HOMEPAGE MANAGER"
-        title="Top Selling Items"
+        
+         title={
+          <>
+            Top Selling <span className="text-blue-600">Items</span>
+          </>
+          }
         subtitle="Control the exact appliances and order displayed in the top selling section on the storefront homepage."
         actions={
           <a
             href="/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
+            className="flex items-center gap-2 rounded border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
           >
             <FiExternalLink size={15} />
             View Storefront
@@ -61,7 +66,7 @@ const TopSelling = () => {
         }
       />
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5">
+      <div className="rounded border border-slate-200 bg-white p-5">
         <div className="mb-4 flex items-center justify-between">
           <p className="text-sm font-bold text-navy-950">Add Product to Top Selling</p>
           <span className="text-xs font-semibold text-slate-400">
@@ -73,12 +78,12 @@ const TopSelling = () => {
           <input
             type="text"
             placeholder="Search appliance by title or SKU to add..."
-            className="w-full rounded-lg border border-slate-200 bg-white py-3 pl-10 pr-4 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
+            className="w-full rounded border border-slate-200 bg-white py-3 pl-10 pr-4 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
           />
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-5">
+      <div className="rounded border border-slate-200 bg-white p-5">
         <div className="mb-5 flex items-center justify-between">
           <div>
             <p className="text-sm font-bold text-navy-950">Homepage Display Order</p>
@@ -88,7 +93,7 @@ const TopSelling = () => {
           </div>
           <button
             type="button"
-            className="flex items-center gap-2 rounded-lg border border-slate-200 px-3.5 py-2 text-xs font-semibold text-navy-950 hover:bg-slate-50"
+            className="flex items-center gap-2 rounded border border-slate-200 px-3.5 py-2 text-xs font-semibold text-navy-950 hover:bg-slate-50"
           >
             <FiRefreshCw size={13} />
             Refresh List
@@ -132,7 +137,7 @@ const TopSelling = () => {
               <button
                 type="button"
                 onClick={() => setDirty(false)}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"
+                className="rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"
               >
                 Save Layout
               </button>

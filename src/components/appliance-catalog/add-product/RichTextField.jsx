@@ -6,7 +6,7 @@ const RichTextField = ({ label, placeholder, toolbar, rows = 4, value, onChange 
   return (
     <div>
       <label className={FIELD_LABEL}>{label}</label>
-      <div className="rounded-lg border border-slate-200">
+      <div className="rounded border border-slate-200">
         <div className="flex items-center gap-3 border-b border-slate-200 bg-slate-50 px-3 py-2">
           <select className="rounded border border-slate-200 bg-white px-2 py-1 text-xs text-navy-950 outline-none">
             <option>Normal</option>

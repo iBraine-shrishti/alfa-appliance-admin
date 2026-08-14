@@ -10,7 +10,7 @@ import {
 
 const SalesHistoryChart = ({ data, totalLabel, total }) => {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6">
+    <div className="rounded border border-slate-200 bg-white p-6">
       <div className="flex items-start justify-between">
         <div>
           <p className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-slate-400">

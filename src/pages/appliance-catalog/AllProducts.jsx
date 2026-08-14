@@ -39,7 +39,7 @@ const AllProducts = () => {
         actions={
           <Link
             to="/admin/appliance-catalog/add-product"
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
+            className="flex items-center gap-2 rounded bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
           >
             <FiPlus size={15} />
             Add Product

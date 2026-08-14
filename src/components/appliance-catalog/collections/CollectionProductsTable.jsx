@@ -4,7 +4,7 @@ const STOCK_TONE = { "In Stock": "green", "Low Stock": "amber", "Out of Stock": 
 
 const CollectionProductsTable = ({ products }) => {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded border border-slate-200 bg-white">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
@@ -21,7 +21,7 @@ const CollectionProductsTable = ({ products }) => {
             {products.map((product) => (
               <tr key={product.id} className="border-b border-slate-50 last:border-0">
                 <td className="px-5 py-4">
-                  <div className="h-10 w-10 rounded-lg bg-slate-100" />
+                  <div className="h-10 w-10 rounded bg-slate-100" />
                 </td>
                 <td className="px-5 py-4 font-semibold text-navy-950">{product.model}</td>
                 <td className="px-5 py-4 text-slate-500">{product.brand}</td>
