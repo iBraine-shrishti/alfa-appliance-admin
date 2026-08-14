@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiSearch, FiExternalLink, FiRefreshCw } from "react-icons/fi";
-import PageHeader from "../../dashboard/components/PageHeader";
+import PageHeader from "../../../components/PageHeader";
 import TopSellingFeatured from "./TopSellingFeatured";
 import TopSellingGridItem from "./TopSellingGridItem";
 

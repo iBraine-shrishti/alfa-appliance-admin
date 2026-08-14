@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { FiSearch, FiFilter, FiArrowUp, FiDownload, FiUserPlus, FiUsers, FiCreditCard, FiCheckCircle } from "react-icons/fi";
-import PageHeader from "../dashboard/components/PageHeader";
+import PageHeader from "../../components/PageHeader";
 import StatCard from "../dashboard/components/StatCard";
 import CustomersTable from "./CustomersTable";
 

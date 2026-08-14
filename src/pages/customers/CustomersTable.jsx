@@ -1,6 +1,6 @@
 import { FiMapPin } from "react-icons/fi";
-import StatusBadge from "../dashboard/components/StatusBadge";
-import Pagination from "../dashboard/components/Pagination";
+import StatusBadge from "../../components/StatusBadge";
+import Pagination from "../../components/Pagination";
 
 const STATUS_TONE = { Subscribed: "green", Guest: "slate" };
 

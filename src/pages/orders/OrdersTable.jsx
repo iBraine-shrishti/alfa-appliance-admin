@@ -1,5 +1,5 @@
-import StatusBadge from "../dashboard/components/StatusBadge";
-import Pagination from "../dashboard/components/Pagination";
+import StatusBadge from "../../components/StatusBadge";
+import Pagination from "../../components/Pagination";
 
 const PAYMENT_TONE = { Paid: "green", Pending: "amber", Failed: "red" };
 const FULFILLMENT_TONE = {

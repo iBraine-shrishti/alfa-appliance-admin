@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { FiSearch, FiPlus } from "react-icons/fi";
-import PageHeader from "../dashboard/components/PageHeader";
+import PageHeader from "../../components/PageHeader";
 import FaqTable from "./FaqTable";
 import CreateFaqModal from "./CreateFaqModal";
 
