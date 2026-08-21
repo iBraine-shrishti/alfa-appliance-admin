@@ -2,12 +2,19 @@ import { FiSettings } from "react-icons/fi";
 
 // Each spec field just needs a key/label/placeholder - add more here, no JSX duplication.
 const SPEC_FIELDS = [
-  { key: "voltageFrequency", label: "Voltage / Frequency", placeholder: "e.g. 220-240V / 50Hz" },
-  { key: "energyClass", label: "Energy Efficiency Class", placeholder: "e.g. A+++, A, B" },
-  { key: "dimensions", label: "Dimensions (W x H x D)", placeholder: "e.g. 60cm x 85cm x 60cm" },
-  { key: "manufacturer", label: "Manufacturer", placeholder: "e.g. Alfa, Samsung, Bosch" },
-  { key: "modelNumber", label: "Model Number", placeholder: "e.g. 31004" },
-  { key: "noiseLevel", label: "Noise Level (dB)", placeholder: "e.g. 45dB" },
+  { key: "productCode", label: "Product Code (SKU)", placeholder: "e.g. ALFA-RF-9051X" },
+  { key: "type", label: "Type", placeholder: "e.g. Freestanding" },
+  { key: "colourFinish", label: "Colour / Finish", placeholder: "e.g. Black Stainless Steel" },
+  { key: "manufacturerGuarantee", label: "Manufacturer's guarantee", placeholder: "e.g. 5 Years" },
+  { key: "energyEfficiencyRating", label: "Energy efficiency rating", placeholder: "e.g. Class C" },
+  { key: "weight", label: "Weight", placeholder: "e.g. 82 kg (Unboxed) / 91 kg (Boxed)" },
+  { key: "fridgeFreezerSplit", label: "Fridge / Freezer split", placeholder: "e.g. 70/30" },
+  { key: "dimensions", label: "Dimensions (H x W x D)", placeholder: "e.g. 178 cm x 91.2 cm x 71.6 cm" },
+  { key: "capacityVolume", label: "Capacity / Volume", placeholder: "e.g. 530 Litres (360L Fridge / 170L Freezer)" },
+  { key: "noiseLevelClass", label: "Noise level & class", placeholder: "e.g. 37 dB(A), Class B" },
+  { key: "powerConsumption", label: "Power & Energy consumption", placeholder: "e.g. 215 kWh/annum" },
+  { key: "safetyFeatures", label: "Safety features", placeholder: "e.g. Child lock, Door open alarm" },
+  { key: "smartConnectivity", label: "Smart / Connectivity", placeholder: "e.g. Wi-Fi Enabled (App Control)" },
 ];
 
 const SpecificationsSection = ({ form, onChange }) => {
@@ -34,18 +41,6 @@ const SpecificationsSection = ({ form, onChange }) => {
           </div>
         ))}
 
-        <div className="sm:col-span-2">
-          <label className="mb-2 block text-xs font-bold tracking-wider text-slate-500">
-            Technical Capacity / Load
-          </label>
-          <textarea
-            rows={3}
-            value={form.specs.capacity ?? ""}
-            onChange={(e) => onChange("capacity", e.target.value)}
-            placeholder="e.g. 9kg capacity, 1400 RPM spin"
-            className="w-full resize-y rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
-          />
-        </div>
       </div>
     </div>
   );
