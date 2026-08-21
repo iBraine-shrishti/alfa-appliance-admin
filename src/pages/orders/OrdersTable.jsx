@@ -40,7 +40,7 @@ const OrdersTable = ({ orders, page, totalPages, totalEntries, pageSize, onPageC
             {orders.map((order) => (
               <tr key={order.id} className="border-b border-slate-50 transition-colors last:border-0 hover:bg-blue-50/30">
                 <td className="px-5 py-4 font-bold text-navy-950">{order.id}</td>
-                <td className="px-5 py-4"><div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-slate-50"><img src={order.image} alt="Order item" className="h-full w-full object-contain p-1" /></div></td>
+                <td className="px-5 py-4"><div className="flex h-30 w-30 items-center justify-center overflow-hidden rounded bg-slate-50"><img src={order.image} alt="Order item" className="h-full w-full object-cover p-1" /></div></td>
                 <td className="px-5 py-4 text-slate-500">{order.date}</td>
                 <td className="px-5 py-4">
                   <p className="font-semibold text-navy-950">{order.customerName}</p>

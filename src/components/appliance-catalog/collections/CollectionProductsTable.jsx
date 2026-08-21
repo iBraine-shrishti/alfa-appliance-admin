@@ -21,7 +21,9 @@ const CollectionProductsTable = ({ products }) => {
             {products.map((product) => (
               <tr key={product.id} className="border-b border-slate-50 last:border-0">
                 <td className="px-5 py-4">
-                  <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-slate-100"><img src={product.image} alt={product.model} className="h-full w-full object-contain p-1" /></div>
+                 
+               <div className="flex h-30 w-30 items-center justify-center overflow-hidden rounded bg-slate-100"><img src={product.image} alt={product.model} className="h-full w-full object-cover p-1" /></div>
+   
                 </td>
                 <td className="px-5 py-4 font-semibold text-navy-950">{product.model}</td>
                 <td className="px-5 py-4 text-slate-500">{product.brand}</td>

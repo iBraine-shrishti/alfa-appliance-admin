@@ -59,7 +59,7 @@ const Inventory = () => {
       />
 
       <div className="grid gap-4 lg:grid-cols-[1.15fr_1.85fr]">
-        <div className="relative overflow-hidden rounded border border-navy-950 bg-navy-950 p-6 text-white">
+        <div className="relative overflow-hidden rounded border border-navy-950 bg-navy-900 p-6 text-white">
           <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full border-[18px] border-blue-500/20" />
           <div className="relative flex items-start justify-between">
             <div>
@@ -158,7 +158,8 @@ const Inventory = () => {
                 return (
                   <tr key={product.id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50/60">
                     <td className="px-5 py-4">
-                      <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded border border-slate-200 bg-slate-50"><img src={product.image} alt={product.name} className="h-full w-full object-contain p-1" /></div>
+                     <div className="flex h-30 w-30 items-center justify-center overflow-hidden rounded border border-slate-200 bg-slate-50"><img src={product.image} alt={product.name} className="h-full w-full object-cover p-1" /></div>
+
                     </td>
                     <td className="max-w-[380px] px-5 py-4">
                       <p className="font-bold text-navy-950">{product.name}</p>
