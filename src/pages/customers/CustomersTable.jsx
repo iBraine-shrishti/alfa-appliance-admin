@@ -1,10 +1,12 @@
-import { FiMapPin } from "react-icons/fi";
+import { FiMapPin, FiTrash2 } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 import StatusBadge from "../../components/StatusBadge";
 import Pagination from "../../components/Pagination";
 
 const STATUS_TONE = { Subscribed: "green", Guest: "slate" };
 
-const CustomersTable = ({ customers, page, totalPages, totalEntries, pageSize, onPageChange }) => {
+const CustomersTable = ({ customers, page, totalPages, totalEntries, pageSize, onPageChange, onDelete }) => {
+  const navigate = useNavigate();
   return (
     <div className="overflow-hidden rounded border border-slate-200 bg-white">
       <div className="overflow-x-auto">
@@ -19,13 +21,14 @@ const CustomersTable = ({ customers, page, totalPages, totalEntries, pageSize, o
               <th className="px-5 py-3">Location</th>
               <th className="px-5 py-3">Orders</th>
               <th className="px-5 py-3">Total Spent</th>
+              <th className="px-5 py-3 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {customers.map((c) => (
-              <tr key={c.id} className="border-b border-slate-50 last:border-0">
+              <tr key={c.id} onClick={() => navigate(`/admin/customers/${c.id}`)} className="group cursor-pointer border-b border-slate-50 last:border-0 hover:bg-blue-50/30">
                 <td className="px-5 py-4">
-                  <input type="checkbox" className="rounded border-slate-300" />
+                  <input type="checkbox" onClick={(event) => event.stopPropagation()} className="rounded border-slate-300" />
                 </td>
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
@@ -60,6 +63,7 @@ const CustomersTable = ({ customers, page, totalPages, totalEntries, pageSize, o
                   </span>
                 </td>
                 <td className="px-5 py-4 font-bold text-navy-950">${c.totalSpent}</td>
+                <td className="px-5 py-4 text-right" onClick={(event) => event.stopPropagation()}><button type="button" onClick={() => onDelete(c.id)} className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-red-100 text-red-400 hover:bg-red-50 hover:text-red-600" aria-label={`Delete ${c.name}`}><FiTrash2 size={14} /></button></td>
               </tr>
             ))}
           </tbody>

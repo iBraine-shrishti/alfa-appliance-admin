@@ -1,29 +1,27 @@
 import { useMemo, useState } from "react";
-import { FiSearch, FiFilter, FiArrowUp, FiDownload, FiUserPlus, FiUsers, FiCreditCard, FiCheckCircle } from "react-icons/fi";
+import { FiSearch, FiFilter, FiArrowUp, FiDownload, FiUserPlus, FiUsers, FiCreditCard, FiCheckCircle, FiChevronDown, FiArrowUpRight } from "react-icons/fi";
 import PageHeader from "../../components/PageHeader";
-import StatCard from "../dashboard/components/StatCard";
 import CustomersTable from "./CustomersTable";
-
-// TODO: replace with real API data.
-const ALL_CUSTOMERS = [
-  { id: 1, initials: "RP", name: "Ritesh Pandey", email: "pandeyritesh276@gmail.com", status: "Subscribed", location: "Thane Maharashtra, India", orders: 1, totalSpent: "850.00" },
-  { id: 2, initials: "PR", name: "Pratik Rane", email: "pratikrane0412@gmail.com", status: "Guest", location: "Mumbai Maharashtra, India", orders: 1, totalSpent: "699.00" },
-  { id: 3, initials: "SA", name: "System Admin", email: "admin@alfaappliances.com", status: "Subscribed", location: null, orders: 0, totalSpent: "0.00" },
-];
+import { adminCustomers } from "../../data/adminCustomers";
 
 const PAGE_SIZE = 10;
 
 const Customers = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [customers, setCustomers] = useState(adminCustomers);
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [sortBy, setSortBy] = useState("name");
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return ALL_CUSTOMERS;
     const q = search.toLowerCase();
-    return ALL_CUSTOMERS.filter(
-      (c) => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q)
-    );
-  }, [search]);
+    return customers
+      .filter((c) => !q || c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || String(c.id).includes(q))
+      .filter((c) => statusFilter === "All" || c.status === statusFilter)
+      .sort((a, b) => sortBy === "orders" ? b.orders - a.orders : sortBy === "spent" ? Number(b.totalSpent) - Number(a.totalSpent) : a.name.localeCompare(b.name));
+  }, [customers, search, sortBy, statusFilter]);
+
+  const handleDelete = (id) => setCustomers((current) => current.filter((customer) => customer.id !== id));
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageCustomers = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -37,7 +35,7 @@ const Customers = () => {
             Global <span className="text-blue-600">Customers</span>
           </>
         }
-        subtitle="Overseeing 3,492 customers"
+        subtitle={`Overseeing ${customers.length} customers`}
         actions={
           <>
             <button
@@ -58,10 +56,29 @@ const Customers = () => {
         }
       />
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <StatCard icon={FiUsers} label="TOTAL CUSTOMERS" value="3,492" />
-        <StatCard icon={FiCreditCard} label="TOTAL LIFETIME VALUE" value="$1.2M" />
-        <StatCard icon={FiCheckCircle} label="ACTIVE SUBSCRIBERS" value="1,824" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {[
+          { icon: FiUsers, label: "Total customers", value: "3,492", note: "Active users", tone: "blue" },
+          { icon: FiCreditCard, label: "Total lifetime value", value: "$1.2M", note: "Customer revenue", tone: "cyan" },
+          { icon: FiCheckCircle, label: "Active subscribers", value: "1,824", note: "Marketing opt-in", tone: "green" },
+        ].map(({ icon: Icon, label, value, note, tone }) => {
+          const tones = {
+            blue: { rail: "bg-blue-600", icon: "bg-blue-50 text-blue-600", note: "text-blue-600" },
+            cyan: { rail: "bg-cyan-500", icon: "bg-cyan-50 text-cyan-600", note: "text-cyan-600" },
+            green: { rail: "bg-emerald-500", icon: "bg-emerald-50 text-emerald-600", note: "text-emerald-600" },
+          }[tone];
+
+          return (
+            <div key={label} className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg">
+              <span className={`absolute inset-x-0 top-0 h-1 ${tones.rail}`} />
+              <div className="flex items-start justify-between gap-3">
+                <div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{label}</p><p className="mt-2 text-3xl font-extrabold leading-none tracking-tight text-navy-950">{value}</p></div>
+                <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${tones.icon}`}><Icon size={18} /></span>
+              </div>
+              <div className="mt-5 flex items-center justify-between"><span className={`text-[10px] font-bold uppercase tracking-wider ${tones.note}`}>{note}</span><FiArrowUpRight className="text-slate-300 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" size={15} /></div>
+            </div>
+          );
+        })}
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -80,20 +97,8 @@ const Customers = () => {
         </div>
 
         <div className="flex gap-3">
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
-          >
-            <FiFilter size={15} />
-            Filter
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-navy-950 hover:bg-slate-50"
-          >
-            <FiArrowUp size={15} />
-            Sort
-          </button>
+          <div className="relative"><FiFilter className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-blue-600" size={14} /><select value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value); setPage(1); }} className="appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-8 text-sm font-semibold text-navy-950 outline-none focus:border-blue-600" aria-label="Filter customers by status"><option>All</option><option>Subscribed</option><option>Guest</option></select><FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={13} /></div>
+          <div className="relative"><FiArrowUp className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-blue-600" size={14} /><select value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="appearance-none rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-8 text-sm font-semibold text-navy-950 outline-none focus:border-blue-600" aria-label="Sort customers"><option value="name">Name</option><option value="orders">Orders</option><option value="spent">Total spent</option></select><FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={13} /></div>
         </div>
       </div>
 
@@ -104,6 +109,7 @@ const Customers = () => {
         totalEntries={filtered.length}
         pageSize={PAGE_SIZE}
         onPageChange={setPage}
+        onDelete={handleDelete}
       />
     </div>
   );
