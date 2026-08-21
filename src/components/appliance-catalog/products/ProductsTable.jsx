@@ -24,7 +24,7 @@ const ProductsTable = ({ products, page, totalPages, totalEntries, pageSize, onP
             {products.map((product) => (
               <tr key={product.id} className="border-b border-slate-50 last:border-0">
                 <td className="px-5 py-4">
-                  <div className="h-11 w-11 rounded-full bg-slate-100" />
+                  <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl bg-slate-100"><img src={product.image} alt={product.name} className="h-full w-full object-contain p-1" /></div>
                 </td>
                 <td className="px-5 py-4">
                   <p className="font-bold text-navy-950">{product.name}</p>

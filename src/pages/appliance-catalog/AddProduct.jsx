@@ -22,6 +22,8 @@ const INITIAL_FORM = {
   description: "",
   bigDescription: "",
   instagramReel: "",
+  mainImage: "",
+  gallery: [],
   category: applianceCategories[0],
   collections: [],
   weight: "",

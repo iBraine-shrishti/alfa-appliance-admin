@@ -10,7 +10,12 @@ const Pagination = ({
   const start = (page - 1) * pageSize + 1;
   const end = Math.min(page * pageSize, totalEntries);
 
-  const pageNumbers = Array.from({ length: Math.min(totalPages, 3) }, (_, i) => i + 1);
+  const pageGroupStart = Math.floor((page - 1) / 5) * 5 + 1;
+  const pageNumbers = Array.from(
+    { length: Math.min(5, totalPages - pageGroupStart + 1) },
+    (_, i) => pageGroupStart + i,
+  );
+  const nextPageGroup = Math.min(totalPages, pageGroupStart + 5);
 
   return (
     <div className="flex flex-col items-center justify-between gap-3 border-t border-slate-100 px-5 py-4 sm:flex-row">
@@ -45,14 +50,27 @@ const Pagination = ({
 
         {totalPages > 3 && <span className="px-1 text-slate-400">...</span>}
 
-        <button
-          type="button"
-          onClick={() => onPageChange(Math.min(totalPages, page + 1))}
-          disabled={page === totalPages}
-          className="flex h-8 w-8 items-center justify-center rounded border border-slate-200 text-slate-500 disabled:opacity-40 hover:bg-slate-50"
-        >
-          <FiChevronRight size={15} />
-        </button>
+        {pageGroupStart + 5 <= totalPages && (
+          <button
+            type="button"
+            onClick={() => onPageChange(nextPageGroup)}
+            className="flex h-8 w-8 items-center justify-center rounded border border-slate-200 text-slate-500 hover:bg-slate-50"
+            aria-label="Next pages"
+            title="Next pages"
+          >
+            <FiChevronRight size={15} />
+          </button>
+        )}
+
+        {totalPages > 5 && (
+          <button
+            type="button"
+            onClick={() => onPageChange(totalPages)}
+            className="rounded border border-slate-200 px-3 py-1.5 text-sm font-semibold text-slate-500 hover:bg-slate-50"
+          >
+            Last
+          </button>
+        )}
       </div>
     </div>
   );

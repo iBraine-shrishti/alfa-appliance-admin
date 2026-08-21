@@ -11,12 +11,7 @@ const AdminAuth = () => {
       <div className="flex flex-1 items-center justify-center px-4 py-10 sm:px-8">
         <div className="w-full max-w-md rounded border border-slate-200 bg-white p-8 shadow-sm">
           <div className="mb-6 flex justify-center">
-            {/* <span className="text-2xl font-extrabold tracking-tight text-navy-950">
-              ALFA
-              <span className="ml-1 block text-center text-[10px] font-semibold tracking-[0.3em] text-blue-600">
-                APPLIANCES
-              </span>
-            </span> */}
+            
              <Logo />
           </div>
 
