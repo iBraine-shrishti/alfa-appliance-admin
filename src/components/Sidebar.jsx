@@ -27,7 +27,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Backdrop - mobile only, shown while drawer is open */}
+     
       {isOpen && (
         <div
           onClick={onClose}
