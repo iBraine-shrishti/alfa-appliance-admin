@@ -3,12 +3,16 @@ import { FiSearch, FiExternalLink, FiRefreshCw } from "react-icons/fi";
 import PageHeader from "../../../components/PageHeader";
 import TopSellingFeatured from "./TopSellingFeatured";
 import TopSellingGridItem from "./TopSellingGridItem";
+import product1Image from "../../../assets/products/product1/product1.png";
+import product2Image from "../../../assets/products/product2/product2.png";
+import product3Image from "../../../assets/products/product3/product3.png";
+import product4Image from "../../../assets/products/product4/product4.png";
 
 const INITIAL_SLOTS = [
-  { spot: 1, product: { id: "tx-20m", name: 'TitanX Commercial 20QT Planetary Stand Mixer (TX-20M)', price: "1,499.00", image: "/images/products/tx-20m.png" } },
-  { spot: 2, product: { id: "pf-40g", name: 'ProFry High Capacity 40lb Floor Gas Fryer with Twin Baskets (PF-40G)', price: "849.00", image: "/images/products/pf-40g.png" } },
-  { spot: 3, product: { id: "as-16v", name: 'AeroSeal 16" Commercial Chamber Vacuum Sealer Machine (AS-16V)', price: "1,120.00", image: "/images/products/as-16v.png" } },
-  { spot: 4, product: { id: "pc-12a", name: 'PreciCut 12" Automatic Gravity Feed Meat Slicer 1/2 HP (PC-12A)', price: "649.00", image: "/images/products/pc-12a.png" } },
+  { spot: 1, product: { id: "tx-20m", name: 'TitanX Commercial 20QT Planetary Stand Mixer (TX-20M)', price: "1,499.00", image: product1Image } },
+  { spot: 2, product: { id: "pf-40g", name: 'ProFry High Capacity 40lb Floor Gas Fryer with Twin Baskets (PF-40G)', price: "849.00", image: product2Image } },
+  { spot: 3, product: { id: "as-16v", name: 'AeroSeal 16" Commercial Chamber Vacuum Sealer Machine (AS-16V)', price: "1,120.00", image: product3Image } },
+  { spot: 4, product: { id: "pc-12a", name: 'PreciCut 12" Automatic Gravity Feed Meat Slicer 1/2 HP (PC-12A)', price: "649.00", image: product4Image } },
   { spot: 5, product: null },
 ];
 
