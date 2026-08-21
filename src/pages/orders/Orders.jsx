@@ -11,60 +11,7 @@ import {
 
 import PageHeader from "../../components/PageHeader";
 import OrdersTable from "./OrdersTable";
-
-// TODO: replace with real API data.
-const ALL_ORDERS = [
-  {
-    id: "#ORD-9021",
-    date: "Oct 24, 2023",
-    customerName: "Eleanor Rigby",
-    customerEmail: "e.rigby@example.com",
-    payment: "Paid",
-    fulfillment: "Processing",
-    items: 3,
-    total: "1,450.00",
-  },
-  {
-    id: "#ORD-9020",
-    date: "Oct 23, 2023",
-    customerName: "Marcus Johnson",
-    customerEmail: "mjohnson@industrial.co.uk",
-    payment: "Paid",
-    fulfillment: "Delivered",
-    items: 12,
-    total: "8,200.50",
-  },
-  {
-    id: "#ORD-9019",
-    date: "Oct 23, 2023",
-    customerName: "Sarah Connor",
-    customerEmail: "s.connor@techsys.com",
-    payment: "Failed",
-    fulfillment: "Cancelled",
-    items: 1,
-    total: "450.00",
-  },
-  {
-    id: "#ORD-9018",
-    date: "Oct 22, 2023",
-    customerName: "David Bowman",
-    customerEmail: "d.bowman@discovery.org",
-    payment: "Pending",
-    fulfillment: "Unfulfilled",
-    items: 5,
-    total: "2,100.00",
-  },
-  {
-    id: "#ORD-9017",
-    date: "Oct 21, 2023",
-    customerName: "Ellen Ripley",
-    customerEmail: "ripley@weyland.corp",
-    payment: "Paid",
-    fulfillment: "Processing",
-    items: 8,
-    total: "5,600.75",
-  },
-];
+import { adminOrders } from "../../data/adminOrders";
 
 const PAGE_SIZE = 5;
 
@@ -160,19 +107,24 @@ const OrderStatCard = ({
 const Orders = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [orders, setOrders] = useState(adminOrders);
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return ALL_ORDERS;
+    if (!search.trim()) return orders;
 
     const q = search.toLowerCase();
 
-    return ALL_ORDERS.filter(
+    return orders.filter(
       (o) =>
         o.id.toLowerCase().includes(q) ||
         o.customerName.toLowerCase().includes(q) ||
         o.customerEmail.toLowerCase().includes(q)
     );
-  }, [search]);
+  }, [orders, search]);
+
+  const handleDelete = (orderId) => {
+    setOrders((current) => current.filter((order) => order.id !== orderId));
+  };
 
   const totalPages = Math.max(
     1,
@@ -322,6 +274,7 @@ const Orders = () => {
         totalEntries={filtered.length}
         pageSize={PAGE_SIZE}
         onPageChange={setPage}
+        onDelete={handleDelete}
       />
     </div>
   );
