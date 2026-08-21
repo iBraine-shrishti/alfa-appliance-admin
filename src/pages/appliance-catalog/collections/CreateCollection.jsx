@@ -2,17 +2,46 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiSave, FiLayers, FiImage, FiSearch, FiExternalLink, FiChevronDown } from "react-icons/fi";
 import { applianceCategories } from "../../../data/applianceCategories";
+import { createCollection } from "../../../services/api";
+
+const slugify = (text) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
 
 const CreateCollection = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ title: "", category: applianceCategories[0], description: "" });
-  const [assignedCount] = useState(0);
+  const [form, setForm] = useState({ title: "", category: applianceCategories[0] || "Washing Machines", description: "" });
+  const [saving, setSaving] = useState(false);
 
   const updateField = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
-  const handleSave = () => {
-    // TODO: POST `form` to your API.
-    navigate("/admin/appliance-catalog/collections");
+  const handleSave = async () => {
+    if (!form.title) {
+      alert("Please provide a title for the collection.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const payload = {
+        title: form.title,
+        slug: slugify(form.title),
+        description: form.description,
+        image: null
+      };
+
+      await createCollection(payload);
+      alert("Collection successfully created in PostgreSQL database!");
+      navigate("/admin/appliance-catalog/collections");
+    } catch (error) {
+      console.error("Create collection error:", error);
+      alert("Error creating collection. Check network connection.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -46,11 +75,12 @@ const CreateCollection = () => {
           </button>
           <button
             type="button"
+            disabled={saving}
             onClick={handleSave}
-            className="flex items-center gap-2 rounded bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
+            className="flex items-center gap-2 rounded bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-50"
           >
             <FiSave size={15} />
-            Save Collection
+            {saving ? "Saving..." : "Save Collection"}
           </button>
         </div>
       </div>
@@ -139,10 +169,6 @@ const CreateCollection = () => {
               className="w-full rounded border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
             />
           </div>
-
-          <p className="mb-4 text-xs font-bold tracking-wider text-slate-400">
-            ASSIGNED PRODUCTS ({assignedCount})
-          </p>
 
           <button
             type="button"

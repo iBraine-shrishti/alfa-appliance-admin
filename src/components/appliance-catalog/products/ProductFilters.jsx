@@ -1,9 +1,23 @@
+import { useEffect, useState } from "react";
 import { FiSearch, FiChevronDown } from "react-icons/fi";
-import { applianceCategories } from "../../../data/applianceCategories";
+import { applianceCategories as fallbackCategories } from "../../../data/applianceCategories";
+import { fetchAdminCategories } from "../../../services/api";
 
 const PRODUCT_STATUSES = ["On Sale", "Active"];
 
 const ProductFilters = ({ search, onSearchChange, category, onCategoryChange, status, onStatusChange }) => {
+  const [categories, setCategories] = useState(fallbackCategories);
+
+  useEffect(() => {
+    const loadCats = async () => {
+      const catData = await fetchAdminCategories();
+      if (catData && catData.length > 0) {
+        setCategories(catData.map((c) => c.name));
+      }
+    };
+    loadCats();
+  }, []);
+
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="relative flex-1">
@@ -24,7 +38,7 @@ const ProductFilters = ({ search, onSearchChange, category, onCategoryChange, st
           className="appearance-none rounded border border-slate-200 bg-white py-2.5 pl-4 pr-9 text-sm font-semibold text-navy-950 outline-none focus:border-blue-600"
         >
           <option value="">All Categories</option>
-          {applianceCategories.map((c) => (
+          {categories.map((c) => (
             <option key={c} value={c}>
               {c}
             </option>

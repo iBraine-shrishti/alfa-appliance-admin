@@ -1,8 +1,27 @@
+import { useEffect, useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import { applianceCategories } from "../../../data/applianceCategories";
-import { productCollectionOptions } from "../../../data/productCollectionOptions";
+import { applianceCategories as fallbackCategories } from "../../../data/applianceCategories";
+import { productCollectionOptions as fallbackCollections } from "../../../data/productCollectionOptions";
+import { fetchAdminCategories, fetchAdminCollections } from "../../../services/api";
 
 const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
+  const [categories, setCategories] = useState(fallbackCategories);
+  const [collections, setCollections] = useState(fallbackCollections);
+
+  useEffect(() => {
+    const loadOrg = async () => {
+      const catData = await fetchAdminCategories();
+      if (catData && catData.length > 0) {
+        setCategories(catData.map((c) => c.name));
+      }
+      const colData = await fetchAdminCollections();
+      if (colData && colData.length > 0) {
+        setCollections(colData.map((c) => c.title));
+      }
+    };
+    loadOrg();
+  }, []);
+
   return (
     <div className="rounded border border-slate-200 bg-white p-6">
       <p className="mb-5 text-sm font-bold text-navy-950">Organization</p>
@@ -16,7 +35,7 @@ const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
               onChange={(e) => onChange("category", e.target.value)}
               className="w-full appearance-none rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none focus:border-blue-600"
             >
-              {applianceCategories.map((c) => (
+              {categories.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
@@ -28,8 +47,8 @@ const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
 
         <div>
           <label className="mb-2 block text-xs font-bold tracking-wider text-slate-500">Collections</label>
-          <div className="flex flex-col gap-2 rounded border border-slate-200 p-3">
-            {productCollectionOptions.map((option) => (
+          <div className="flex flex-col gap-2 rounded border border-slate-200 p-3 max-h-48 overflow-y-auto">
+            {collections.map((option) => (
               <label key={option} className="flex items-center gap-2 text-sm text-navy-950">
                 <input
                   type="checkbox"

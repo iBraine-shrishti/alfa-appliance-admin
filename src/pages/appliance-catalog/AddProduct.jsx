@@ -8,6 +8,7 @@ import SpecificationsSection from "../../components/appliance-catalog/add-produc
 import OrganizationSidebar from "../../components/appliance-catalog/add-product/OrganizationSidebar";
 import PricingSidebar from "../../components/appliance-catalog/add-product/PricingSidebar";
 import { applianceCategories } from "../../data/applianceCategories";
+import { createProduct } from "../../services/api";
 
 const slugify = (text) =>
   text
@@ -22,7 +23,7 @@ const INITIAL_FORM = {
   description: "",
   bigDescription: "",
   instagramReel: "",
-  category: applianceCategories[0],
+  category: applianceCategories[0] || "Washing Machines",
   collections: [],
   weight: "",
   onSale: false,
@@ -34,6 +35,7 @@ const INITIAL_FORM = {
 const AddProduct = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_FORM);
+  const [saving, setSaving] = useState(false);
 
   const updateField = (key, value) => {
     setForm((prev) => ({
@@ -56,9 +58,46 @@ const AddProduct = () => {
     }));
   };
 
-  const handleSave = () => {
-    // TODO: POST `form` to your API.
-    navigate("/admin/appliance-catalog/all-products");
+  const handleSave = async () => {
+    if (!form.title || !form.price) {
+      alert("Please provide at least a title and price for the appliance.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const payload = {
+        title: form.title,
+        slug: form.slug || slugify(form.title),
+        description: form.description,
+        long_description: form.bigDescription,
+        instagram_reel: form.instagramReel,
+        category: 1, // Default or mapped ID
+        brand: 1, // Default or mapped ID
+        price: parseFloat(form.price) || 0,
+        old_price: form.oldPrice ? parseFloat(form.oldPrice) : null,
+        is_sale: form.onSale,
+        weight: form.weight,
+        model_number: form.specs.modelNumber || "",
+        capacity: form.specs.capacity || "",
+        energy_rating: form.specs.energyClass || "5 Star",
+        voltage_frequency: form.specs.voltageFrequency || "",
+        noise_level: form.specs.noiseLevel || "",
+        dimensions: form.specs.dimensions || "",
+        sku: `SKU-${Date.now().toString().slice(-6)}`,
+        stock_quantity: 10,
+        image_url: "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=800&q=80"
+      };
+
+      await createProduct(payload);
+      alert("Appliance product successfully saved to backend database!");
+      navigate("/admin/appliance-catalog/all-products");
+    } catch (error) {
+      console.error("Save product error:", error);
+      alert("Error saving product to backend. Check network console.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -70,7 +109,7 @@ const AddProduct = () => {
             Add <span className="text-blue-600">Product</span>
           </>
         }
-        subtitle="Create new appliance entry"
+        subtitle="Create new appliance entry in database"
         actions={
           <>
             <button
@@ -82,11 +121,12 @@ const AddProduct = () => {
             </button>
             <button
               type="button"
+              disabled={saving}
               onClick={handleSave}
-              className="flex items-center gap-2 rounded bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
+              className="flex items-center gap-2 rounded bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-50"
             >
               <FiSave size={15} />
-              Save Product
+              {saving ? "Saving..." : "Save Product"}
             </button>
           </>
         }

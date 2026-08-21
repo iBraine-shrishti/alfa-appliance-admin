@@ -1,28 +1,22 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiSearch, FiPlus } from "react-icons/fi";
 import PageHeader from "../../components/PageHeader";
 import FaqTable from "./FaqTable";
 import CreateFaqModal from "./CreateFaqModal";
+import { fetchAdminFaqs, createFaq, deleteFaq } from "../../services/api";
 
-// TODO: replace with real API data.
 const INITIAL_FAQS = [
   {
     id: 1,
-    question: "How do I calibrate the ALFA-9000 sensor?",
-    answer: "Ensure the unit is powered off before connecting the calibration probe to port A...",
-    product: "ALFA-9000",
+    question: "Does delivery include removal of old appliance in the UK?",
+    answer: "Yes, Alfa Appliances UK offers optional eco-recycle removal of your old appliance upon delivery.",
+    product: "GLOBAL / GENERAL",
   },
   {
     id: 2,
     question: "What is the warranty period for commercial units?",
     answer: "All commercial appliances come with a standard 24-month parts and labour warranty...",
-    product: "GLOBAL / GENERAL (Shows everywhere)",
-  },
-  {
-    id: 3,
-    question: "Error Code E-45 Troubleshooting",
-    answer: "E-45 indicates a pressure valve failure. Please check the inlet hose for blockages...",
-    product: "PRO-WASH SERIES",
+    product: "GLOBAL / GENERAL",
   },
 ];
 
@@ -31,6 +25,27 @@ const FaqManagement = () => {
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingFaq, setEditingFaq] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadFaqs = async () => {
+    setLoading(true);
+    const data = await fetchAdminFaqs();
+    if (data && data.length > 0) {
+      setFaqs(
+        data.map((f) => ({
+          id: f.id,
+          question: f.question,
+          answer: f.answer,
+          product: f.product ? `Product ID #${f.product}` : "GLOBAL / GENERAL",
+        }))
+      );
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadFaqs();
+  }, []);
 
   const filtered = useMemo(() => {
     if (!search.trim()) return faqs;
@@ -48,17 +63,25 @@ const FaqManagement = () => {
     setModalOpen(true);
   };
 
-  const handleSave = (form) => {
-    if (form.id) {
-      setFaqs((prev) => prev.map((f) => (f.id === form.id ? { ...f, ...form } : f)));
-    } else {
-      setFaqs((prev) => [...prev, { ...form, id: Date.now() }]);
+  const handleSave = async (form) => {
+    try {
+      await createFaq({
+        question: form.question,
+        answer: form.answer,
+        product: null
+      });
+      loadFaqs();
+      setModalOpen(false);
+    } catch (error) {
+      console.error("Save FAQ error:", error);
     }
-    setModalOpen(false);
   };
 
-  const handleDelete = (id) => {
-    setFaqs((prev) => prev.filter((f) => f.id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this FAQ?")) {
+      await deleteFaq(id);
+      loadFaqs();
+    }
   };
 
   return (
@@ -67,7 +90,7 @@ const FaqManagement = () => {
         eyebrow="PRODUCT HELP CENTER"
         title={<>Frequently Asked  
          <span className="text-blue-600"> Questions</span></>}
-        subtitle="Manage knowledge base articles and support queries."
+        subtitle={loading ? "Loading FAQs..." : "Manage knowledge base articles live in PostgreSQL database."}
         actions={
           <button
             type="button"
@@ -99,7 +122,13 @@ const FaqManagement = () => {
           </div>
         </div>
 
-        <FaqTable faqs={filtered} onEdit={openEdit} onDelete={handleDelete} />
+        {loading ? (
+          <div className="p-8 text-center text-sm font-semibold text-slate-500 bg-white rounded border border-slate-200">
+            Loading knowledge base FAQs...
+          </div>
+        ) : (
+          <FaqTable faqs={filtered} onEdit={openEdit} onDelete={handleDelete} />
+        )}
       </div>
 
       <CreateFaqModal

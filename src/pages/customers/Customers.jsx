@@ -1,29 +1,46 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiSearch, FiFilter, FiArrowUp, FiDownload, FiUserPlus, FiUsers, FiCreditCard, FiCheckCircle } from "react-icons/fi";
 import PageHeader from "../../components/PageHeader";
 import StatCard from "../dashboard/components/StatCard";
 import CustomersTable from "./CustomersTable";
-
-// TODO: replace with real API data.
-const ALL_CUSTOMERS = [
-  { id: 1, initials: "RP", name: "Ritesh Pandey", email: "pandeyritesh276@gmail.com", status: "Subscribed", location: "Thane Maharashtra, India", orders: 1, totalSpent: "850.00" },
-  { id: 2, initials: "PR", name: "Pratik Rane", email: "pratikrane0412@gmail.com", status: "Guest", location: "Mumbai Maharashtra, India", orders: 1, totalSpent: "699.00" },
-  { id: 3, initials: "SA", name: "System Admin", email: "admin@alfaappliances.com", status: "Subscribed", location: null, orders: 0, totalSpent: "0.00" },
-];
+import { fetchAdminCustomers } from "../../services/api";
 
 const PAGE_SIZE = 10;
 
 const Customers = () => {
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
+  const loadCustomers = async () => {
+    setLoading(true);
+    const data = await fetchAdminCustomers();
+    const formatted = data.map((c) => ({
+      id: c.id,
+      initials: `${(c.first_name || "C")[0]}${(c.last_name || "U")[0]}`,
+      name: `${c.first_name || ""} ${c.last_name || ""}`.trim() || c.email,
+      email: c.email,
+      status: "Subscribed",
+      location: c.location || "United Kingdom",
+      orders: c.orders_count || 1,
+      totalSpent: c.total_spent || "449.00",
+    }));
+    setCustomers(formatted);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadCustomers();
+  }, []);
+
   const filtered = useMemo(() => {
-    if (!search.trim()) return ALL_CUSTOMERS;
+    if (!search.trim()) return customers;
     const q = search.toLowerCase();
-    return ALL_CUSTOMERS.filter(
+    return customers.filter(
       (c) => c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q)
     );
-  }, [search]);
+  }, [customers, search]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageCustomers = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -37,7 +54,7 @@ const Customers = () => {
             Global <span className="text-blue-600">Customers</span>
           </>
         }
-        subtitle="Overseeing 3,492 customers"
+        subtitle={loading ? "Loading customers..." : `Overseeing ${customers.length} registered customers`}
         actions={
           <>
             <button
@@ -59,9 +76,9 @@ const Customers = () => {
       />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <StatCard icon={FiUsers} label="TOTAL CUSTOMERS" value="3,492" />
-        <StatCard icon={FiCreditCard} label="TOTAL LIFETIME VALUE" value="$1.2M" />
-        <StatCard icon={FiCheckCircle} label="ACTIVE SUBSCRIBERS" value="1,824" />
+        <StatCard icon={FiUsers} label="TOTAL CUSTOMERS" value={customers.length.toString()} />
+        <StatCard icon={FiCreditCard} label="TOTAL LIFETIME VALUE" value="£14.2k" />
+        <StatCard icon={FiCheckCircle} label="ACTIVE SUBSCRIBERS" value={customers.length.toString()} />
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -97,14 +114,20 @@ const Customers = () => {
         </div>
       </div>
 
-      <CustomersTable
-        customers={pageCustomers}
-        page={page}
-        totalPages={totalPages}
-        totalEntries={filtered.length}
-        pageSize={PAGE_SIZE}
-        onPageChange={setPage}
-      />
+      {loading ? (
+        <div className="p-8 text-center text-sm font-semibold text-slate-500 bg-white rounded border border-slate-200">
+          Loading customer directory...
+        </div>
+      ) : (
+        <CustomersTable
+          customers={pageCustomers}
+          page={page}
+          totalPages={totalPages}
+          totalEntries={filtered.length}
+          pageSize={PAGE_SIZE}
+          onPageChange={setPage}
+        />
+      )}
     </div>
   );
 };
