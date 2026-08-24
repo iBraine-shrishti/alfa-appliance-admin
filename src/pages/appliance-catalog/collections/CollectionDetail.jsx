@@ -1,13 +1,36 @@
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FiDownload, FiPlus, FiChevronDown } from "react-icons/fi";
-import { adminCollections } from "../../../data/adminCollections";
-import { getCollectionProducts } from "../../../data/collectionProducts";
 import CollectionProductsTable from "../../../components/appliance-catalog/collections/CollectionProductsTable";
+import { fetchCollectionDetail, fetchCollectionProducts } from "../../../services/api";
 
 const CollectionDetail = () => {
   const { slug } = useParams();
-  const collection = adminCollections.find((c) => c.slug === slug);
-  const products = getCollectionProducts(slug);
+  const [collection, setCollection] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadCollectionData = async () => {
+      setLoading(true);
+      const [colData, prodData] = await Promise.all([
+        fetchCollectionDetail(slug),
+        fetchCollectionProducts(slug),
+      ]);
+      setCollection(colData);
+      setProducts(prodData);
+      setLoading(false);
+    };
+    loadCollectionData();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="rounded border border-slate-200 bg-white p-8 text-center text-sm font-semibold text-slate-500">
+        Loading collection details...
+      </div>
+    );
+  }
 
   if (!collection) {
     return (
@@ -25,7 +48,7 @@ const CollectionDetail = () => {
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
         <div>
           <h1 className="text-3xl font-extrabold uppercase text-navy-950">{collection.title}</h1>
-          <p className="mt-1 text-sm text-slate-400">{collection.productCount} Products</p>
+          <p className="mt-1 text-sm text-slate-400">{products.length} Products</p>
         </div>
 
         <div className="flex shrink-0 items-center gap-3">

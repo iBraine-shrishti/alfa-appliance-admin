@@ -1,16 +1,42 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiCalendar, FiCheckCircle, FiCode, FiSave, FiTag } from "react-icons/fi";
+import { createDiscount } from "../../services/api";
 
 const CreateDiscount = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ code: "", percentage: "10", minimum: "0", startDate: "", endDate: "" });
+
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const generateCode = () => update("code", `ALFA${Math.random().toString(36).slice(2, 8).toUpperCase()}`);
+
+  const handleSave = async () => {
+    if (!form.code.trim()) {
+      alert("Please enter or generate a discount code.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await createDiscount({
+        code: form.code.trim().toUpperCase(),
+        discount_percentage: parseInt(form.percentage || "10", 10),
+        minimum_purchase_amount: parseFloat(form.minimum || "0"),
+        active: true,
+        valid_from: form.startDate ? new Date(form.startDate).toISOString() : new Date().toISOString(),
+        valid_to: form.endDate ? new Date(form.endDate).toISOString() : new Date(Date.now() + 365*86400000).toISOString(),
+      });
+      navigate("/admin/discounts");
+    } catch (err) {
+      alert("Failed to create discount code. Make sure the code is unique.");
+      setLoading(false);
+    }
+  };
+
   const summary = useMemo(() => ({
     code: form.code || "No code set",
     value: form.percentage ? `${form.percentage}% off` : "No value set",
-    dates: form.startDate && form.endDate ? `${form.startDate} to ${form.endDate}` : "No dates set",
+    dates: form.startDate && form.endDate ? `${form.startDate} to ${form.endDate}` : "Active immediately",
   }), [form]);
 
   return (
@@ -20,7 +46,7 @@ const CreateDiscount = () => {
           <button type="button" onClick={() => navigate("/admin/discounts")} className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-navy-950 hover:bg-blue-50 hover:text-blue-600" aria-label="Back to discounts"><FiArrowLeft size={17} /></button>
           <div><p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-blue-600"><span className="h-1.5 w-1.5 rounded-full bg-blue-600" /> New discount</p><h1 className="mt-1 text-2xl font-extrabold tracking-tight text-navy-950">Create <span className="text-blue-600">Discount</span></h1></div>
         </div>
-        <button type="button" onClick={() => navigate("/admin/discounts")} className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-500"><FiSave size={15} /> Save discount</button>
+        <button type="button" disabled={loading} onClick={handleSave} className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white hover:bg-blue-500 disabled:opacity-50"><FiSave size={15} /> {loading ? "Saving..." : "Save discount"}</button>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_minmax(280px,0.9fr)]">

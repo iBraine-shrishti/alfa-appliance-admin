@@ -62,7 +62,7 @@ const CustomersTable = ({ customers, page, totalPages, totalEntries, pageSize, o
                     {c.orders} {c.orders === 1 ? "Order" : "Orders"}
                   </span>
                 </td>
-                <td className="px-5 py-4 font-bold text-navy-950">${c.totalSpent}</td>
+                <td className="px-5 py-4 font-bold text-navy-950">£{c.totalSpent}</td>
                 <td className="px-5 py-4 text-right" onClick={(event) => event.stopPropagation()}><button type="button" onClick={() => onDelete(c.id)} className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-red-100 text-red-400 hover:bg-red-50 hover:text-red-600" aria-label={`Delete ${c.name}`}><FiTrash2 size={14} /></button></td>
               </tr>
             ))}

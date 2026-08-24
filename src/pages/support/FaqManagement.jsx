@@ -1,41 +1,32 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiSearch, FiPlus } from "react-icons/fi";
 import PageHeader from "../../components/PageHeader";
 import FaqTable from "./FaqTable";
 import CreateFaqModal from "./CreateFaqModal";
-
-// TODO: replace with real API data.
-const INITIAL_FAQS = [
-  {
-    id: 1,
-    question: "How do I calibrate the ALFA-9000 sensor?",
-    answer: "Ensure the unit is powered off before connecting the calibration probe to port A...",
-    product: "ALFA-9000",
-  },
-  {
-    id: 2,
-    question: "What is the warranty period for commercial units?",
-    answer: "All commercial appliances come with a standard 24-month parts and labour warranty...",
-    product: "GLOBAL / GENERAL (Shows everywhere)",
-  },
-  {
-    id: 3,
-    question: "Error Code E-45 Troubleshooting",
-    answer: "E-45 indicates a pressure valve failure. Please check the inlet hose for blockages...",
-    product: "PRO-WASH SERIES",
-  },
-];
+import { fetchAdminFaqs, createFaq, deleteFaq } from "../../services/api";
 
 const FaqManagement = () => {
-  const [faqs, setFaqs] = useState(INITIAL_FAQS);
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingFaq, setEditingFaq] = useState(null);
 
+  const loadFaqs = async () => {
+    setLoading(true);
+    const data = await fetchAdminFaqs();
+    setFaqs(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadFaqs();
+  }, []);
+
   const filtered = useMemo(() => {
     if (!search.trim()) return faqs;
     const q = search.toLowerCase();
-    return faqs.filter((f) => f.question.toLowerCase().includes(q));
+    return faqs.filter((f) => (f.question || "").toLowerCase().includes(q));
   }, [faqs, search]);
 
   const openCreate = () => {
@@ -48,17 +39,37 @@ const FaqManagement = () => {
     setModalOpen(true);
   };
 
-  const handleSave = (form) => {
-    if (form.id) {
-      setFaqs((prev) => prev.map((f) => (f.id === form.id ? { ...f, ...form } : f)));
-    } else {
-      setFaqs((prev) => [...prev, { ...form, id: Date.now() }]);
+  const handleSave = async (form) => {
+    try {
+      if (form.id) {
+        await fetch(`http://127.0.0.1:8000/api/faqs/${form.id}/`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: form.question, answer: form.answer }),
+        });
+        setFaqs((prev) => prev.map((f) => (f.id === form.id ? { ...f, ...form } : f)));
+      } else {
+        const created = await createFaq({
+          question: form.question,
+          answer: form.answer,
+          product: null,
+        });
+        setFaqs((prev) => [created, ...prev]);
+      }
+      setModalOpen(false);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save FAQ to backend database.");
     }
-    setModalOpen(false);
   };
 
-  const handleDelete = (id) => {
-    setFaqs((prev) => prev.filter((f) => f.id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this FAQ?")) {
+      const ok = await deleteFaq(id);
+      if (ok) {
+        setFaqs((prev) => prev.filter((f) => f.id !== id));
+      }
+    }
   };
 
   return (
@@ -67,7 +78,7 @@ const FaqManagement = () => {
         eyebrow="PRODUCT HELP CENTER"
         title={<>Frequently Asked  
          <span className="text-blue-600"> Questions</span></>}
-        subtitle="Manage knowledge base articles and support queries."
+        subtitle={loading ? "Loading FAQs..." : "Manage knowledge base articles and support queries."}
         actions={
           <button
             type="button"

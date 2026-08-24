@@ -1,10 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import StatusBadge from "../../StatusBadge";
 import Pagination from "../../Pagination";
 
-const STATUS_TONE = { "On Sale": "blue", Active: "slate" };
+const STATUS_TONE = { "On Sale": "blue", Active: "slate", "Out of Stock": "amber" };
 
-const ProductsTable = ({ products, page, totalPages, totalEntries, pageSize, onPageChange }) => {
+const ProductsTable = ({ products, page, totalPages, totalEntries, pageSize, onPageChange, onDeleteProduct }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="overflow-hidden rounded border border-slate-200 bg-white">
       <div className="overflow-x-auto">
@@ -22,7 +25,7 @@ const ProductsTable = ({ products, page, totalPages, totalEntries, pageSize, onP
           </thead>
           <tbody>
             {products.map((product) => (
-              <tr key={product.id} className="border-b border-slate-50 last:border-0">
+              <tr key={product.id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50/50">
                 <td className="px-5 py-4">
                   <div className="flex h-30 w-30 items-center justify-center overflow-hidden rounded bg-slate-100"><img src={product.image} alt={product.name} className="h-full w-full object-cover p-1" /></div>
                 </td>
@@ -32,7 +35,7 @@ const ProductsTable = ({ products, page, totalPages, totalEntries, pageSize, onP
                 </td>
                 <td className="px-5 py-4">
                   <span className="inline-block rounded bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
-                    {product.category.toUpperCase()}
+                    {String(product.category).toUpperCase()}
                   </span>
                 </td>
                 <td className="px-5 py-4">
@@ -48,16 +51,28 @@ const ProductsTable = ({ products, page, totalPages, totalEntries, pageSize, onP
                     </span>
                   )}
                 </td>
-                <td className="px-5 py-4 font-bold text-navy-950">${product.price.toLocaleString()}</td>
+                <td className="px-5 py-4 font-bold text-navy-950">£{product.price?.toLocaleString()}</td>
                 <td className="px-5 py-4">
-                  <StatusBadge label={product.status} tone={STATUS_TONE[product.status]} />
+                  <StatusBadge label={product.status} tone={STATUS_TONE[product.status] || "slate"} />
                 </td>
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <button type="button" className="text-slate-400 hover:text-blue-600" aria-label="Edit">
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/admin/appliance-catalog/edit-product/${product.id}`)}
+                      className="text-slate-400 hover:text-blue-600"
+                      aria-label="Edit product"
+                      title="Edit product"
+                    >
                       <FiEdit2 size={15} />
                     </button>
-                    <button type="button" className="text-slate-400 hover:text-red-600" aria-label="Delete">
+                    <button
+                      type="button"
+                      onClick={() => onDeleteProduct && onDeleteProduct(product.id)}
+                      className="text-slate-400 hover:text-red-600"
+                      aria-label="Delete product"
+                      title="Delete product"
+                    >
                       <FiTrash2 size={15} />
                     </button>
                   </div>

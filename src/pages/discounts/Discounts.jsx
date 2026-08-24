@@ -1,15 +1,27 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiActivity, FiEdit2, FiPlus, FiSearch, FiTag, FiTrash2, FiZap } from "react-icons/fi";
 import PageHeader from "../../components/PageHeader";
+import { fetchAdminDiscounts, deleteDiscount } from "../../services/api";
 
-const INITIAL_DISCOUNTS = [];
-const TABS = ["All", "Active", "Scheduled", "Expired"];
+const TABS = ["All", "Active", "Expired"];
 
 const Discounts = () => {
-  const [discounts, setDiscounts] = useState(INITIAL_DISCOUNTS);
+  const [discounts, setDiscounts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("All");
   const [search, setSearch] = useState("");
+
+  const loadDiscounts = async () => {
+    setLoading(true);
+    const data = await fetchAdminDiscounts();
+    setDiscounts(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadDiscounts();
+  }, []);
 
   const filteredDiscounts = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -20,8 +32,13 @@ const Discounts = () => {
     });
   }, [activeTab, discounts, search]);
 
-  const handleDelete = (id) => {
-    setDiscounts((current) => current.filter((discount) => discount.id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this coupon code?")) {
+      const ok = await deleteDiscount(id);
+      if (ok) {
+        setDiscounts((current) => current.filter((discount) => discount.id !== id));
+      }
+    }
   };
 
   return (
@@ -29,7 +46,7 @@ const Discounts = () => {
       <PageHeader
         eyebrow="PROMOTIONS"
         title={<>All <span className="text-blue-600">Discounts</span></>}
-        subtitle="Create focused offers and track promotional performance."
+        subtitle={loading ? "Loading coupon codes..." : "Manage promotional codes and active store discounts."}
         actions={
           <Link to="/admin/discounts/create" className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-blue-500">
             <FiPlus size={15} /> Create discount
@@ -48,7 +65,7 @@ const Discounts = () => {
         </div>
         <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600"><FiZap size={16} /></span>
-          <div><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Total redemptions</p><p className="mt-0.5 text-lg font-extrabold text-navy-950">{discounts.reduce((sum, discount) => sum + (discount.used || 0), 0)}</p></div>
+          <div><p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">Min Purchase Threshold</p><p className="mt-0.5 text-lg font-extrabold text-navy-950">£100.00</p></div>
         </div>
       </div>
 
@@ -79,7 +96,7 @@ const Discounts = () => {
                 <th className="px-6 py-4">Code</th>
                 <th className="px-6 py-4">Status</th>
                 <th className="px-6 py-4">Discount value</th>
-                <th className="px-6 py-4">Usage</th>
+                <th className="px-6 py-4">Min Purchase</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -87,10 +104,14 @@ const Discounts = () => {
               {filteredDiscounts.map((discount) => (
                 <tr key={discount.id} className="border-b border-slate-50 last:border-0 hover:bg-blue-50/30">
                   <td className="px-6 py-4 font-extrabold text-navy-950">{discount.code}</td>
-                  <td className="px-6 py-4 text-slate-500">{discount.status}</td>
-                  <td className="px-6 py-4 font-bold text-navy-950">{discount.value}%</td>
-                  <td className="px-6 py-4 text-slate-500">{discount.used} / {discount.limit || "Unlimited"}</td>
-                  <td className="px-6 py-4"><div className="flex justify-end gap-2"><button type="button" className="text-slate-400 hover:text-blue-600" aria-label="Edit discount"><FiEdit2 size={15} /></button><button type="button" onClick={() => handleDelete(discount.id)} className="text-slate-400 hover:text-red-600" aria-label="Delete discount"><FiTrash2 size={15} /></button></div></td>
+                  <td className="px-6 py-4 text-slate-500">
+                    <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${discount.status === "Active" ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}>
+                      {discount.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 font-bold text-navy-950">{discount.discount}</td>
+                  <td className="px-6 py-4 text-slate-500">£{discount.minPurchase}</td>
+                  <td className="px-6 py-4"><div className="flex justify-end gap-2"><button type="button" onClick={() => handleDelete(discount.id)} className="text-slate-400 hover:text-red-600" aria-label="Delete discount"><FiTrash2 size={15} /></button></div></td>
                 </tr>
               ))}
             </tbody>
@@ -100,7 +121,7 @@ const Discounts = () => {
         {filteredDiscounts.length === 0 && (
           <div className="flex min-h-[180px] flex-col items-center justify-center border-t border-slate-100 px-6 text-center">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><FiTag size={20} /></span>
-            <p className="mt-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-300">No discounts yet</p>
+            <p className="mt-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-300">No discounts found</p>
             <p className="mt-1 max-w-xs text-sm text-slate-400">Launch your first offer and it will appear here.</p>
             <Link to="/admin/discounts/create" className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-navy-950 px-3.5 py-2 text-xs font-bold text-white hover:bg-blue-600"><FiPlus size={13} /> Create discount</Link>
           </div>

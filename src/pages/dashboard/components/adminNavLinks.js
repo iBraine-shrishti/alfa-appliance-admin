@@ -48,7 +48,7 @@ export const adminNavLinks = [
   {
     key: "support",
     to: "/admin/support",
-    label: "FQA",
+    label: "FAQ",
     icon: FiLifeBuoy,
   },
 ];

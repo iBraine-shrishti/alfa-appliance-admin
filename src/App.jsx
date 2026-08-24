@@ -41,6 +41,7 @@ function App() {
           <Route path="appliance-catalog/all-products" element={<AllProducts />} />
           <Route path="appliance-catalog/inventory" element={<Inventory />} />
           <Route path="appliance-catalog/add-product" element={<AddProduct />} />
+          <Route path="appliance-catalog/edit-product/:productId" element={<AddProduct />} />
           <Route path="appliance-catalog/collections" element={<AllCollections />} />
           <Route path="appliance-catalog/collections/create" element={<CreateCollection />} />
           <Route path="appliance-catalog/collections/:slug" element={<CollectionDetail />} />

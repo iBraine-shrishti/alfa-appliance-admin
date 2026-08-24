@@ -1,30 +1,48 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiSearch, FiFilter, FiArrowUp, FiDownload, FiUserPlus, FiUsers, FiCreditCard, FiCheckCircle, FiChevronDown, FiArrowUpRight } from "react-icons/fi";
 import PageHeader from "../../components/PageHeader";
 import CustomersTable from "./CustomersTable";
-import { adminCustomers } from "../../data/adminCustomers";
+import { fetchAdminCustomers } from "../../services/api";
 
 const PAGE_SIZE = 10;
 
 const Customers = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [customers, setCustomers] = useState(adminCustomers);
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("All");
   const [sortBy, setSortBy] = useState("name");
+
+  const loadCustomers = async () => {
+    setLoading(true);
+    const data = await fetchAdminCustomers();
+    setCustomers(data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadCustomers();
+  }, []);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
     return customers
-      .filter((c) => !q || c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || String(c.id).includes(q))
+      .filter((c) => !q || (c.name || "").toLowerCase().includes(q) || (c.email || "").toLowerCase().includes(q) || String(c.id).includes(q))
       .filter((c) => statusFilter === "All" || c.status === statusFilter)
-      .sort((a, b) => sortBy === "orders" ? b.orders - a.orders : sortBy === "spent" ? Number(b.totalSpent) - Number(a.totalSpent) : a.name.localeCompare(b.name));
+      .sort((a, b) => sortBy === "orders" ? b.orders - a.orders : sortBy === "spent" ? Number(b.spent || 0) - Number(a.spent || 0) : (a.name || "").localeCompare(b.name || ""));
   }, [customers, search, sortBy, statusFilter]);
 
-  const handleDelete = (id) => setCustomers((current) => current.filter((customer) => customer.id !== id));
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this customer account?")) {
+      setCustomers((current) => current.filter((customer) => customer.id !== id));
+    }
+  };
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageCustomers = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  const totalSpentAll = customers.reduce((acc, curr) => acc + (curr.spent || 0), 0);
 
   return (
     <div className="flex flex-col gap-6">
@@ -35,7 +53,7 @@ const Customers = () => {
             Global <span className="text-blue-600">Customers</span>
           </>
         }
-        subtitle={`Overseeing ${customers.length} customers`}
+        subtitle={loading ? "Loading customer directory..." : `Overseeing ${customers.length} registered customer accounts`}
         actions={
           <>
             <button
@@ -58,9 +76,9 @@ const Customers = () => {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[
-          { icon: FiUsers, label: "Total customers", value: "3,492", note: "Active users", tone: "blue" },
-          { icon: FiCreditCard, label: "Total lifetime value", value: "$1.2M", note: "Customer revenue", tone: "cyan" },
-          { icon: FiCheckCircle, label: "Active subscribers", value: "1,824", note: "Marketing opt-in", tone: "green" },
+          { icon: FiUsers, label: "Total customers", value: customers.length.toString(), note: "Active users", tone: "blue" },
+          { icon: FiCreditCard, label: "Total lifetime value", value: `£${totalSpentAll.toLocaleString(undefined, { minimumFractionDigits: 2 })}`, note: "Customer revenue", tone: "cyan" },
+          { icon: FiCheckCircle, label: "Active accounts", value: customers.length.toString(), note: "Verified users", tone: "green" },
         ].map(({ icon: Icon, label, value, note, tone }) => {
           const tones = {
             blue: { rail: "bg-blue-600", icon: "bg-blue-50 text-blue-600", note: "text-blue-600" },

@@ -1,18 +1,41 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiArrowLeft, FiSave, FiLayers, FiImage, FiSearch, FiExternalLink, FiChevronDown } from "react-icons/fi";
+import { FiArrowLeft, FiSave, FiLayers, FiImage, FiChevronDown } from "react-icons/fi";
 import { applianceCategories } from "../../../data/applianceCategories";
+import { createCollection } from "../../../services/api";
+
+const slugify = (text) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
 
 const CreateCollection = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ title: "", category: applianceCategories[0], description: "" });
-  const [assignedCount] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const updateField = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
-  const handleSave = () => {
-    // TODO: POST `form` to your API.
-    navigate("/admin/appliance-catalog/collections");
+  const handleSave = async () => {
+    if (!form.title.trim()) {
+      alert("Please enter a collection title.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await createCollection({
+        title: form.title.trim(),
+        slug: slugify(form.title),
+        description: form.description || "Curated collection of precision home appliances.",
+        image_url: "http://127.0.0.1:8000/media/collections/1-Washing_Machines.png"
+      });
+      navigate("/admin/appliance-catalog/collections");
+    } catch (err) {
+      alert("Failed to create collection. Make sure the title is unique.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,11 +69,12 @@ const CreateCollection = () => {
           </button>
           <button
             type="button"
+            disabled={loading}
             onClick={handleSave}
-            className="flex items-center gap-2 rounded bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
+            className="flex items-center gap-2 rounded bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 disabled:opacity-50"
           >
             <FiSave size={15} />
-            Save Collection
+            {loading ? "Saving..." : "Save Collection"}
           </button>
         </div>
       </div>
@@ -126,31 +150,6 @@ const CreateCollection = () => {
               />
             </div>
           </div>
-        </div>
-
-        <div className="rounded border border-slate-200 bg-white p-6">
-          <p className="mb-5 text-sm font-bold text-navy-950">Products in Collection</p>
-
-          <div className="relative mb-4">
-            <FiSearch className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full rounded border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-navy-950 outline-none placeholder:text-slate-400 focus:border-blue-600"
-            />
-          </div>
-
-          <p className="mb-4 text-xs font-bold tracking-wider text-slate-400">
-            ASSIGNED PRODUCTS ({assignedCount})
-          </p>
-
-          <button
-            type="button"
-            className="flex w-full items-center justify-center gap-2 rounded bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-500"
-          >
-            <FiExternalLink size={15} />
-            See Collection
-          </button>
         </div>
       </div>
     </div>

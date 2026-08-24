@@ -1,29 +1,45 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiCheck, FiSearch, FiSave, FiAlertTriangle, FiActivity, FiBox } from "react-icons/fi";
 import PageHeader from "../../components/PageHeader";
 import Pagination from "../../components/Pagination";
-import { adminProducts } from "../../data/adminProducts";
+import { fetchAdminProducts } from "../../services/api";
 
 const LOW_STOCK_LIMIT = 5;
 const PAGE_SIZE = 10;
 
 const Inventory = () => {
+  const [productsList, setProductsList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [quantities, setQuantities] = useState(() =>
-    Object.fromEntries(adminProducts.map((product) => [product.id, String(product.inventory)])),
-  );
+  const [quantities, setQuantities] = useState({});
   const [savedIds, setSavedIds] = useState([]);
+
+  const loadProducts = async () => {
+    setLoading(true);
+    const data = await fetchAdminProducts();
+    setProductsList(data);
+    const initQty = {};
+    data.forEach((p) => {
+      initQty[p.id] = String(p.inventory);
+    });
+    setQuantities(initQty);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
 
   const filteredProducts = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
-    return adminProducts.filter(
+    return productsList.filter(
       (product) =>
         !normalizedSearch ||
         product.name.toLowerCase().includes(normalizedSearch) ||
-        product.id.toLowerCase().includes(normalizedSearch),
+        String(product.id).toLowerCase().includes(normalizedSearch),
     );
-  }, [search]);
+  }, [productsList, search]);
 
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
   const pageProducts = filteredProducts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -33,8 +49,19 @@ const Inventory = () => {
     setSavedIds((current) => current.filter((savedId) => savedId !== id));
   };
 
-  const saveQuantity = (id) => {
+  const saveQuantity = async (id) => {
     setSavedIds((current) => (current.includes(id) ? current : [...current, id]));
+    // Save to database live API
+    try {
+      const qVal = parseInt(quantities[id] || "0", 10);
+      await fetch(`http://127.0.0.1:8000/api/products/${id}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stock_quantity: qVal }),
+      });
+    } catch (err) {
+      console.error("Save stock error:", err);
+    }
   };
 
   const totalUnits = Object.values(quantities).reduce((total, quantity) => total + Number(quantity || 0), 0);
@@ -42,8 +69,8 @@ const Inventory = () => {
   const lowStock = Object.values(quantities).filter(
     (quantity) => Number(quantity || 0) > 0 && Number(quantity || 0) <= LOW_STOCK_LIMIT,
   ).length;
-  const healthyProducts = adminProducts.length - outOfStock - lowStock;
-  const stockHealth = Math.round((healthyProducts / adminProducts.length) * 100);
+  const healthyProducts = Math.max(0, productsList.length - outOfStock - lowStock);
+  const stockHealth = productsList.length > 0 ? Math.round((healthyProducts / productsList.length) * 100) : 100;
   const stockSegments = [
     { label: "Healthy", value: healthyProducts, color: "bg-blue-600" },
     { label: "Low stock", value: lowStock, color: "bg-amber-400" },
@@ -55,7 +82,7 @@ const Inventory = () => {
       <PageHeader
         eyebrow="STOCK MANAGEMENT"
         title={<>Product <span className="text-blue-600">Inventory</span></>}
-        subtitle={`Managing stock quantities across ${adminProducts.length} products`}
+        subtitle={loading ? "Loading stock inventory..." : `Managing stock quantities across ${productsList.length} products`}
       />
 
       <div className="grid gap-4 lg:grid-cols-[1.15fr_1.85fr]">
@@ -85,7 +112,7 @@ const Inventory = () => {
               <div
                 key={segment.label}
                 className={segment.color}
-                style={{ width: `${(segment.value / adminProducts.length) * 100}%` }}
+                style={{ width: `${productsList.length > 0 ? (segment.value / productsList.length) * 100 : 0}%` }}
               />
             ))}
           </div>
@@ -103,7 +130,7 @@ const Inventory = () => {
           <div className="rounded border border-slate-200 bg-white p-5">
             <div className="flex h-9 w-9 items-center justify-center rounded bg-blue-50 text-blue-600"><FiBox size={17} /></div>
             <p className="mt-5 text-xs font-bold uppercase tracking-wider text-slate-400">Product lines</p>
-            <p className="mt-1 text-3xl font-extrabold text-navy-950">{adminProducts.length}</p>
+            <p className="mt-1 text-3xl font-extrabold text-navy-950">{productsList.length}</p>
             <p className="mt-1 text-xs text-slate-400">Being tracked</p>
           </div>
           <div className="rounded border border-slate-200 bg-white p-5">
@@ -150,7 +177,7 @@ const Inventory = () => {
             </thead>
             <tbody>
               {pageProducts.map((product) => {
-                const quantity = Number(quantities[product.id] || 0);
+                const quantity = Number(quantities[product.id] ?? product.inventory ?? 0);
                 const isSaved = savedIds.includes(product.id);
                 const isOut = quantity === 0;
                 const isLow = quantity > 0 && quantity <= LOW_STOCK_LIMIT;
@@ -158,19 +185,20 @@ const Inventory = () => {
                 return (
                   <tr key={product.id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50/60">
                     <td className="px-5 py-4">
-                     <div className="flex h-30 w-30 items-center justify-center overflow-hidden rounded border border-slate-200 bg-slate-50"><img src={product.image} alt={product.name} className="h-full w-full object-cover p-1" /></div>
-
+                      <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded border border-slate-200 bg-slate-50">
+                        <img src={product.image} alt={product.name} className="h-full w-full object-cover p-1" />
+                      </div>
                     </td>
                     <td className="max-w-[380px] px-5 py-4">
                       <p className="font-bold text-navy-950">{product.name}</p>
                       <p className="mt-1 truncate text-xs font-semibold uppercase tracking-wider text-slate-400">/{product.id}</p>
                     </td>
-                    <td className="px-5 py-4 font-mono text-xs font-semibold text-slate-500">ID-{product.id.slice(0, 6).toUpperCase()}</td>
+                    <td className="px-5 py-4 font-mono text-xs font-semibold text-slate-500">ID-{String(product.id).slice(0, 6).toUpperCase()}</td>
                     <td className="px-5 py-4 text-center">
                       <input
                         type="number"
                         min="0"
-                        value={quantities[product.id]}
+                        value={quantities[product.id] ?? ""}
                         onChange={(event) => updateQuantity(product.id, event.target.value)}
                         aria-label={`Update stock for ${product.name}`}
                         className="w-24 rounded border border-slate-200 bg-white px-3 py-2.5 text-center font-bold text-navy-950 outline-none focus:border-blue-600"
