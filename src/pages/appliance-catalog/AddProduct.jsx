@@ -8,7 +8,7 @@ import SpecificationsSection from "../../components/appliance-catalog/add-produc
 import OrganizationSidebar from "../../components/appliance-catalog/add-product/OrganizationSidebar";
 import PricingSidebar from "../../components/appliance-catalog/add-product/PricingSidebar";
 import { applianceCategories } from "../../data/applianceCategories";
-import { createProduct, formatImageUrl } from "../../services/api";
+import { createProduct, formatImageUrl, API_BASE_URL, BACKEND_DOMAIN } from "../../services/api";
 
 const slugify = (text) =>
   text
@@ -47,7 +47,7 @@ const AddProduct = () => {
     if (isEditMode) {
       const fetchProductDetails = async () => {
         try {
-          const res = await fetch(`http://127.0.0.1:8000/api/products/${productId}/`);
+          const res = await fetch(`${API_BASE_URL}/products/${productId}/`);
           if (res.ok) {
             const data = await res.json();
             setForm({
@@ -116,7 +116,7 @@ const AddProduct = () => {
         old_price: form.oldPrice ? parseFloat(form.oldPrice) : null,
         is_sale: form.onSale || false,
         description: form.description || form.bigDescription || "High performance home appliance.",
-        image_url: form.mainImage || "http://127.0.0.1:8000/media/products/product1/product1.png",
+        image_url: form.mainImage || `${BACKEND_DOMAIN}/media/products/product1/product1.png`,
         model_number: form.specs?.modelNumber || "ALFA-2026",
         capacity: form.specs?.capacity || "Standard Capacity",
         energy_rating: form.specs?.energyRating || "5 Star",
@@ -124,7 +124,7 @@ const AddProduct = () => {
       };
 
       if (isEditMode) {
-        const res = await fetch(`http://127.0.0.1:8000/api/products/${productId}/`, {
+        const res = await fetch(`${API_BASE_URL}/products/${productId}/`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

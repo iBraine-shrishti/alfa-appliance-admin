@@ -1,12 +1,13 @@
 // API Service for Alfa Appliances Admin Panel
-export const API_BASE_URL = "http://127.0.0.1:8000/api";
+export const BACKEND_DOMAIN = "https://alfa-appliances-backend.onrender.com";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `${BACKEND_DOMAIN}/api`;
 
 export const formatImageUrl = (imageUrl) => {
   if (!imageUrl) return "/placeholder-appliance.png";
   if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
     return imageUrl;
   }
-  return `http://127.0.0.1:8000${imageUrl}`;
+  return `${BACKEND_DOMAIN}${imageUrl}`;
 };
 
 // 1. Admin Login
@@ -199,7 +200,7 @@ export const fetchAdminOrders = async () => {
       const firstItem = o.items && o.items.length > 0 ? o.items[0] : null;
       const imgUrl = firstItem?.product?.image_display_url 
         ? formatImageUrl(firstItem.product.image_display_url)
-        : "http://127.0.0.1:8000/media/products/product1/product1.png";
+        : `${BACKEND_DOMAIN}/media/products/product1/product1.png`;
       const totalVal = parseFloat(o.total_price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       return {
         id: `#ORD-${o.id}`,

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiSave, FiLayers, FiImage, FiChevronDown } from "react-icons/fi";
 import { applianceCategories } from "../../../data/applianceCategories";
-import { createCollection } from "../../../services/api";
+import { createCollection, BACKEND_DOMAIN } from "../../../services/api";
 
 const slugify = (text) =>
   text
@@ -29,7 +29,7 @@ const CreateCollection = () => {
         title: form.title.trim(),
         slug: slugify(form.title),
         description: form.description || "Curated collection of precision home appliances.",
-        image_url: "http://127.0.0.1:8000/media/collections/1-Washing_Machines.png"
+        image_url: `${BACKEND_DOMAIN}/media/collections/1-Washing_Machines.png`
       });
       navigate("/admin/appliance-catalog/collections");
     } catch (err) {

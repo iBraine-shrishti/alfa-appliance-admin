@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FiCheck, FiSearch, FiSave, FiAlertTriangle, FiActivity, FiBox } from "react-icons/fi";
 import PageHeader from "../../components/PageHeader";
 import Pagination from "../../components/Pagination";
-import { fetchAdminProducts } from "../../services/api";
+import { fetchAdminProducts, API_BASE_URL } from "../../services/api";
 
 const LOW_STOCK_LIMIT = 5;
 const PAGE_SIZE = 10;
@@ -54,7 +54,7 @@ const Inventory = () => {
     // Save to database live API
     try {
       const qVal = parseInt(quantities[id] || "0", 10);
-      await fetch(`http://127.0.0.1:8000/api/products/${id}/`, {
+      await fetch(`${API_BASE_URL}/products/${id}/`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stock_quantity: qVal }),

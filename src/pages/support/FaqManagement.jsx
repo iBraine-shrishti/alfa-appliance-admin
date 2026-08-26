@@ -3,7 +3,7 @@ import { FiSearch, FiPlus } from "react-icons/fi";
 import PageHeader from "../../components/PageHeader";
 import FaqTable from "./FaqTable";
 import CreateFaqModal from "./CreateFaqModal";
-import { fetchAdminFaqs, createFaq, deleteFaq } from "../../services/api";
+import { fetchAdminFaqs, createFaq, deleteFaq, API_BASE_URL } from "../../services/api";
 
 const FaqManagement = () => {
   const [faqs, setFaqs] = useState([]);
@@ -42,7 +42,7 @@ const FaqManagement = () => {
   const handleSave = async (form) => {
     try {
       if (form.id) {
-        await fetch(`http://127.0.0.1:8000/api/faqs/${form.id}/`, {
+        await fetch(`${API_BASE_URL}/faqs/${form.id}/`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ question: form.question, answer: form.answer }),
