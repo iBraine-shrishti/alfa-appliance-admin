@@ -4,6 +4,10 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `${BACKEND_DOMA
 
 export const formatImageUrl = (imageUrl) => {
   if (!imageUrl) return "/placeholder-appliance.png";
+  if (typeof imageUrl === "string" && (imageUrl.includes("127.0.0.1:8000") || imageUrl.includes("localhost:8000"))) {
+    const path = imageUrl.replace(/^https?:\/\/[^\/]+/, "");
+    return `${BACKEND_DOMAIN}${path}`;
+  }
   if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
     return imageUrl;
   }
