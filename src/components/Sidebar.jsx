@@ -140,7 +140,7 @@ const Sidebar = ({ isOpen, onClose }) => {
             onClick={() => {
               localStorage.removeItem("adminToken");
               localStorage.removeItem("adminUser");
-              window.location.href = "/";
+              window.location.replace("/");
             }}
             className="text-slate-400 hover:text-navy-950"
             aria-label="Log out"
