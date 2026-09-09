@@ -21,7 +21,7 @@ const AdminLoginForm = () => {
     if (result.success) {
       localStorage.setItem("adminToken", result.token);
       localStorage.setItem("adminUser", JSON.stringify(result.user));
-      navigate("/admin/dashboard");
+      navigate("/admin/dashboard", { replace: true });
     } else {
       setErrorMsg(result.error || "Authentication failed. Check admin credentials.");
     }
