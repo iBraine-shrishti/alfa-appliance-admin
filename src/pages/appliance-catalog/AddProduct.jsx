@@ -144,7 +144,10 @@ const AddProduct = () => {
         video_url: form.videoUrl || "",
         instagram_reel: form.instagramReel || "",
         energy_rating: "5 Star",
-        inverter_technology: true
+        inverter_technology: true,
+        category: form.category,
+        collections: form.collections,
+        gallery: form.gallery,
       };
 
 
