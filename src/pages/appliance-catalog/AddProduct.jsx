@@ -23,6 +23,7 @@ const INITIAL_FORM = {
   description: "",
   bigDescription: "",
   instagramReel: "",
+  videoUrl: "",
   mainImage: "",
   gallery: [],
   category: applianceCategories[0],
@@ -33,6 +34,7 @@ const INITIAL_FORM = {
   oldPrice: "",
   specs: {},
 };
+
 
 const AddProduct = () => {
   const navigate = useNavigate();
@@ -54,20 +56,28 @@ const AddProduct = () => {
               title: data.title || "",
               slug: data.slug || slugify(data.title || ""),
               description: data.description || "",
-              bigDescription: data.description || "",
+              bigDescription: data.long_description || data.description || "",
               instagramReel: data.instagram_reel || "",
+              videoUrl: data.video_url || "",
               mainImage: formatImageUrl(data.image_display_url || data.image_url),
               gallery: data.images ? data.images.map(img => formatImageUrl(img.url)) : [],
+
               category: data.category_name || applianceCategories[0],
-              collections: [],
+              collections: Array.isArray(data.collections) 
+                ? data.collections.map(c => typeof c === 'object' ? (c.title || c.name) : c) 
+                : [],
               weight: data.weight || "",
               onSale: Boolean(data.is_sale),
               price: data.price ? String(data.price) : "",
               oldPrice: data.old_price ? String(data.old_price) : "",
               specs: {
-                modelNumber: data.model_number || "",
-                capacity: data.capacity || "",
-                energyRating: data.energy_rating || "",
+                productCode: data.sku || data.model_number || "",
+                type: data.appliance_type || "",
+                colourFinish: data.color || "",
+                manufacturerGuarantee: data.warranty || "",
+                weight: data.weight || "",
+                dimensions: data.dimensions || "",
+                capacityVolume: data.capacity || "",
               },
             });
           }
@@ -86,11 +96,16 @@ const AddProduct = () => {
       ...prev,
       [key]: value,
       ...(key === "title" ? { slug: slugify(value) } : {}),
+      ...(key === "weight" ? { specs: { ...prev.specs, weight: value } } : {}),
     }));
   };
 
   const updateSpec = (key, value) => {
-    setForm((prev) => ({ ...prev, specs: { ...prev.specs, [key]: value } }));
+    setForm((prev) => ({
+      ...prev,
+      specs: { ...prev.specs, [key]: value },
+      ...(key === "weight" ? { weight: value } : {}),
+    }));
   };
 
   const toggleCollection = (option) => {
@@ -116,12 +131,22 @@ const AddProduct = () => {
         old_price: form.oldPrice ? parseFloat(form.oldPrice) : null,
         is_sale: form.onSale || false,
         description: form.description || form.bigDescription || "High performance home appliance.",
+        long_description: form.bigDescription || form.description || "",
+        sku: form.specs?.productCode || `SKU-${Date.now()}`,
+        model_number: form.specs?.productCode || "ALFA-2026",
+        appliance_type: form.specs?.type || "",
+        color: form.specs?.colourFinish || "",
+        warranty: form.specs?.manufacturerGuarantee || "",
+        weight: form.specs?.weight || form.weight || "",
+        dimensions: form.specs?.dimensions || "",
+        capacity: form.specs?.capacityVolume || "Standard Capacity",
         image_url: form.mainImage || `${BACKEND_DOMAIN}/media/products/product1/product1.png`,
-        model_number: form.specs?.modelNumber || "ALFA-2026",
-        capacity: form.specs?.capacity || "Standard Capacity",
-        energy_rating: form.specs?.energyRating || "5 Star",
+        video_url: form.videoUrl || "",
+        instagram_reel: form.instagramReel || "",
+        energy_rating: "5 Star",
         inverter_technology: true
       };
+
 
       if (isEditMode) {
         const res = await fetch(`${API_BASE_URL}/products/${productId}/`, {
@@ -131,8 +156,9 @@ const AddProduct = () => {
         });
         if (!res.ok) throw new Error("Failed to update product");
       } else {
-        await createProduct({ ...payload, stock_quantity: 15, sku: `SKU-${Date.now()}` });
+        await createProduct({ ...payload, stock_quantity: 15 });
       }
+
 
       navigate("/admin/appliance-catalog/all-products");
     } catch (err) {
@@ -141,6 +167,7 @@ const AddProduct = () => {
       setLoading(false);
     }
   };
+
 
   if (initialLoading) {
     return (

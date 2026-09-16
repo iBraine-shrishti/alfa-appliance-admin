@@ -34,23 +34,26 @@ const ProductDetailsSection = ({ form, onChange }) => {
         </div>
 
         <RichTextField
-          label="Description"
-          placeholder="Enter product description with rich text, bold, tables..."
-          toolbar={["B", "I", "U", "S"]}
+          label="Short Description"
+          placeholder="Enter quick product summary..."
+          minHeight="120px"
           value={form.description}
           onChange={(v) => onChange("description", v)}
         />
 
         <RichTextField
           label="Big Description (Specs Section)"
-          placeholder="Enter detailed long description, formatting, tables..."
-          toolbar={["B", "I"]}
+          placeholder="Enter detailed description paragraphs, specifications, features, etc..."
+          minHeight="240px"
           value={form.bigDescription}
           onChange={(v) => onChange("bigDescription", v)}
         />
+
       </div>
     </div>
   );
 };
 
 export default ProductDetailsSection;
+
+
