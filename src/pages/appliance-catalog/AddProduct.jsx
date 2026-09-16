@@ -124,6 +124,23 @@ const AddProduct = () => {
     }
     setLoading(true);
     try {
+      // Ensure image_url is a permanent URL and never a client-side blob:
+      let mainImgUrl = form.mainImage;
+      if (!mainImgUrl || mainImgUrl.startsWith("blob:")) {
+        const validGallery = (form.gallery || []).find((g) => {
+          const u = typeof g === "string" ? g : g?.url;
+          return u && !u.startsWith("blob:");
+        });
+        mainImgUrl = validGallery
+          ? (typeof validGallery === "string" ? validGallery : validGallery.url)
+          : `${BACKEND_DOMAIN}/media/products/product1/product1.png`;
+      }
+
+      // Filter out any unsaved temporary blob: items from gallery
+      const cleanGallery = (form.gallery || [])
+        .map((g) => (typeof g === "string" ? g : g?.url))
+        .filter((u) => u && !u.startsWith("blob:"));
+
       const payload = {
         title: form.title,
         slug: form.slug || slugify(form.title),
@@ -140,14 +157,14 @@ const AddProduct = () => {
         weight: form.specs?.weight || form.weight || "",
         dimensions: form.specs?.dimensions || "",
         capacity: form.specs?.capacityVolume || "Standard Capacity",
-        image_url: form.mainImage || `${BACKEND_DOMAIN}/media/products/product1/product1.png`,
+        image_url: mainImgUrl,
         video_url: form.videoUrl || "",
         instagram_reel: form.instagramReel || "",
         energy_rating: "5 Star",
         inverter_technology: true,
         category: form.category,
         collections: form.collections,
-        gallery: form.gallery,
+        gallery: cleanGallery,
       };
 
 

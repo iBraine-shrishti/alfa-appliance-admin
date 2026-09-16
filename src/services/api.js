@@ -388,3 +388,19 @@ export const deleteFaq = async (id) => {
     return false;
   }
 };
+
+// 10. Media Upload to Cloudinary via Backend
+export const uploadMediaFile = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await fetch(`${API_BASE_URL}/upload/`, {
+    method: "POST",
+    body: formData,
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || "Failed to upload file to Cloudinary");
+  }
+  const data = await res.json();
+  return data.url;
+};

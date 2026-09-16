@@ -10,7 +10,9 @@ import {
   FiChevronLeft,
   FiChevronRight,
   FiPlay,
+  FiLoader,
 } from "react-icons/fi";
+import { uploadMediaFile } from "../../../services/api";
 
 const ACCEPTED_MEDIA_TYPES =
   "image/*,video/*,.mp4,.mov,.webm,.mkv,.avi,.wmv,.jpg,.jpeg,.png,.webp,.gif,.svg,.avif";
@@ -43,31 +45,85 @@ const MediaSection = ({ form, onChange }) => {
   const galleryInput = useRef(null);
   const [isDraggingMain, setIsDraggingMain] = useState(false);
   const [isDraggingGallery, setIsDraggingGallery] = useState(false);
+  const [uploadingMain, setUploadingMain] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
 
   const galleryItems = form.gallery || [];
   const mainMediaUrl = getMediaUrl(form.mainImage);
   const mainIsVideo = isVideoItem(form.mainImage || mainMediaUrl);
 
-  const handleMainFile = (file) => {
+  const handleMainFile = async (file) => {
     if (!file) return;
     const isVideo = file.type.startsWith("video");
-    const objUrl = URL.createObjectURL(file);
-    onChange("mainImage", objUrl);
-    if (isVideo && !form.videoUrl) {
-      onChange("videoUrl", objUrl);
+    const previewUrl = URL.createObjectURL(file);
+    onChange("mainImage", previewUrl);
+    setUploadingMain(true);
+    try {
+      const cdnUrl = await uploadMediaFile(file);
+      onChange("mainImage", cdnUrl);
+      if (isVideo && !form.videoUrl) {
+        onChange("videoUrl", cdnUrl);
+      }
+    } catch (err) {
+      console.error("Main image upload to Cloudinary failed:", err);
+      alert("Failed to upload image to Cloudinary: " + (err.message || "Network error"));
+    } finally {
+      setUploadingMain(false);
     }
   };
 
-  const handleGalleryFiles = (filesList) => {
+  const handleGalleryFiles = async (filesList) => {
     const files = Array.from(filesList || []);
     if (!files.length) return;
-    const newItems = files.map((file) => ({
+
+    setUploadingGallery(true);
+    const tempItems = files.map((file) => ({
       url: URL.createObjectURL(file),
       type: file.type.startsWith("video") ? "video" : "image",
       name: file.name,
       file,
+      uploading: true,
     }));
-    onChange("gallery", [...galleryItems, ...newItems]);
+
+    const currentBase = [...galleryItems, ...tempItems];
+    onChange("gallery", currentBase);
+
+    try {
+      const results = await Promise.all(
+        files.map(async (file) => {
+          try {
+            const cdnUrl = await uploadMediaFile(file);
+            return { name: file.name, url: cdnUrl, type: file.type.startsWith("video") ? "video" : "image" };
+          } catch (err) {
+            console.error("Gallery file upload failed:", file.name, err);
+            return null;
+          }
+        })
+      );
+
+      const updatedGallery = currentBase
+        .map((item) => {
+          if (item.uploading && item.name) {
+            const match = results.find((r) => r && r.name === item.name);
+            if (match && match.url) {
+              return {
+                url: match.url,
+                type: match.type,
+                name: item.name,
+                uploading: false,
+              };
+            }
+          }
+          return item;
+        })
+        .filter((item) => !item.url?.startsWith("blob:"));
+
+      onChange("gallery", updatedGallery);
+    } catch (err) {
+      console.error("Gallery upload error:", err);
+    } finally {
+      setUploadingGallery(false);
+    }
   };
 
   const removeGalleryItem = (index) => {
@@ -146,7 +202,13 @@ const MediaSection = ({ form, onChange }) => {
             }`}
           >
             {mainMediaUrl ? (
-              <div className="flex flex-col items-center gap-3">
+              <div className="relative flex flex-col items-center gap-3">
+                {uploadingMain && (
+                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-lg bg-black/60 text-white">
+                    <FiLoader className="animate-spin text-blue-400" size={24} />
+                    <span className="mt-2 text-xs font-semibold">Uploading to Cloudinary...</span>
+                  </div>
+                )}
                 {mainIsVideo ? (
                   <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-black">
                     <video
@@ -281,6 +343,12 @@ const MediaSection = ({ form, onChange }) => {
                     >
                       {/* Media Thumbnail */}
                       <div className="relative h-28 w-full bg-slate-900">
+                        {item.uploading && (
+                          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/75 text-white">
+                            <FiLoader className="animate-spin text-blue-400" size={20} />
+                            <span className="mt-1 text-[10px] font-bold">Uploading...</span>
+                          </div>
+                        )}
                         {isVid ? (
                           <div className="relative h-full w-full">
                             <video
