@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { FiChevronDown, FiLink, FiX, FiCheck } from "react-icons/fi";
+import { FiChevronDown, FiLink, FiX, FiCheck, FiCode, FiEye } from "react-icons/fi";
 
 const TEXT_COLORS = [
   "#000000",
@@ -33,6 +33,9 @@ const RichTextField = ({
   const isInternalChangeRef = useRef(false);
   const containerRef = useRef(null);
 
+  // Raw HTML/text toggle
+  const [isRawMode, setIsRawMode] = useState(false);
+
   // Dropdown states
   const [showHeadingMenu, setShowHeadingMenu] = useState(false);
   const [showTextColorMenu, setShowTextColorMenu] = useState(false);
@@ -41,6 +44,7 @@ const RichTextField = ({
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkInput, setLinkInput] = useState("");
   const savedSelectionRangeRef = useRef(null);
+
 
   // Active state trackers
   const [currentHeading, setCurrentHeading] = useState("Normal");
@@ -56,13 +60,24 @@ const RichTextField = ({
 
   // Keep external value in sync with contentEditable
   useEffect(() => {
-    if (editorRef.current) {
-      if (!isInternalChangeRef.current && editorRef.current.innerHTML !== (value || "")) {
-        editorRef.current.innerHTML = value || "";
+    if (editorRef.current && !isRawMode) {
+      if (!isInternalChangeRef.current) {
+        let htmlVal = value || "";
+        // If value has newlines but no HTML tags, preserve them as <br>
+        if (htmlVal && !/<[a-z][\s\S]*>/i.test(htmlVal) && htmlVal.includes("\n")) {
+          htmlVal = htmlVal
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/\r\n|\r|\n/g, "<br>");
+        }
+        if (editorRef.current.innerHTML !== htmlVal) {
+          editorRef.current.innerHTML = htmlVal;
+        }
       }
       isInternalChangeRef.current = false;
     }
-  }, [value]);
+  }, [value, isRawMode]);
 
   // Close menus when clicking outside
   useEffect(() => {
@@ -77,6 +92,58 @@ const RichTextField = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handlePaste = (e) => {
+    if (isRawMode) return;
+
+    e.preventDefault();
+    const plainText = e.clipboardData?.getData("text/plain") || "";
+    const htmlText = e.clipboardData?.getData("text/html") || "";
+
+    let contentToInsert = "";
+
+    // If clipboard has rich HTML with tables or structured lists, preserve that HTML cleanly
+    if (htmlText && (htmlText.includes("<table") || htmlText.includes("<ul") || htmlText.includes("<ol"))) {
+      try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, "text/html");
+        doc.querySelectorAll("script, style, meta, link").forEach((el) => el.remove());
+        contentToInsert = doc.body.innerHTML;
+      } catch {
+        contentToInsert = "";
+      }
+    }
+
+    // If not rich HTML table/list, or for plain text (e.g. copied Currys specs or any multi-line document):
+    if (!contentToInsert && plainText) {
+      const escaped = plainText
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      // Strictly convert newlines to <br> so all line breaks are retained
+      contentToInsert = escaped.replace(/\r\n|\r|\n/g, "<br>");
+    }
+
+    if (contentToInsert) {
+      const success = document.execCommand("insertHTML", false, contentToInsert);
+      if (!success) {
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0) {
+          const range = sel.getRangeAt(0);
+          range.deleteContents();
+          const tempDiv = document.createElement("div");
+          tempDiv.innerHTML = contentToInsert;
+          const frag = document.createDocumentFragment();
+          let node;
+          while ((node = tempDiv.firstChild)) {
+            frag.appendChild(node);
+          }
+          range.insertNode(frag);
+        }
+      }
+      handleInput();
+    }
+  };
 
   const handleInput = () => {
     if (editorRef.current) {
@@ -114,6 +181,7 @@ const RichTextField = ({
   };
 
   const exec = (command, val = null) => {
+    if (isRawMode) return;
     if (editorRef.current) {
       editorRef.current.focus();
       document.execCommand(command, false, val);
@@ -122,6 +190,7 @@ const RichTextField = ({
   };
 
   const selectHeading = (type) => {
+    if (isRawMode) return;
     setCurrentHeading(type);
     setShowHeadingMenu(false);
     if (editorRef.current) {
@@ -142,10 +211,12 @@ const RichTextField = ({
   };
 
   const handleBlockquote = () => {
+    if (isRawMode) return;
     exec("formatBlock", "<blockquote>");
   };
 
   const handleOpenLinkModal = () => {
+    if (isRawMode) return;
     // Save current text selection so link can be applied accurately
     const sel = window.getSelection();
     if (sel && sel.rangeCount > 0) {
@@ -511,17 +582,46 @@ const RichTextField = ({
           <button
             type="button"
             onClick={handleClearFormat}
+            disabled={isRawMode}
             title="Clear formatting"
-            className="flex h-7 w-7 items-center justify-center rounded hover:bg-slate-200/70 cursor-pointer transition-colors text-slate-700"
+            className={`flex h-7 w-7 items-center justify-center rounded hover:bg-slate-200/70 cursor-pointer transition-colors text-slate-700 ${
+              isRawMode ? "opacity-30 cursor-not-allowed" : ""
+            }`}
           >
             <span className="font-serif font-bold text-xs">
               T<sub className="text-[9px] -bottom-0.5">x</sub>
             </span>
           </button>
+
+          {/* 14. Raw Text / Code Mode Toggle */}
+          <div className="ml-auto flex items-center pl-2 border-l border-slate-200">
+            <button
+              type="button"
+              onClick={() => setIsRawMode(!isRawMode)}
+              title={isRawMode ? "Switch to Visual Editor" : "Switch to Raw Text & HTML Mode"}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold cursor-pointer transition-all ${
+                isRawMode
+                  ? "bg-blue-600 text-white shadow-xs hover:bg-blue-700"
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+              }`}
+            >
+              {isRawMode ? (
+                <>
+                  <FiEye size={13} />
+                  <span>Visual Mode</span>
+                </>
+              ) : (
+                <>
+                  <FiCode size={13} />
+                  <span>Raw Mode &lt;/&gt;</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Modal / Dialog for Inserting Link */}
-        {showLinkModal && (
+        {showLinkModal && !isRawMode && (
           <div className="flex items-center gap-2 border-b border-blue-100 bg-blue-50/70 px-3 py-2">
             <FiLink size={14} className="text-blue-600 shrink-0" />
             <input
@@ -553,17 +653,45 @@ const RichTextField = ({
         )}
 
         {/* Editable Content Area */}
-        <div
-          ref={editorRef}
-          contentEditable
-          suppressContentEditableWarning
-          onInput={handleInput}
-          onKeyUp={checkActiveStates}
-          onMouseUp={checkActiveStates}
-          data-placeholder={placeholder}
-          className="rich-text-editor-content p-4 outline-none text-sm text-navy-950 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-400 empty:before:pointer-events-none"
-          style={{ minHeight, maxHeight: "550px", overflowY: "auto" }}
-        />
+        {isRawMode ? (
+          <div className="flex flex-col">
+            <div className="flex items-center justify-between border-b border-amber-200 bg-amber-50/80 px-3.5 py-1.5 text-[11px] text-amber-800">
+              <span>
+                <strong>Raw Mode:</strong> Paste any content, raw technical specs, or HTML code directly. Line breaks and spacing are preserved 100% as typed.
+              </span>
+              <span className="font-mono text-[10px] font-semibold text-amber-700 bg-amber-100/70 px-1.5 py-0.5 rounded">
+                Raw Text / HTML
+              </span>
+            </div>
+            <textarea
+              value={value || ""}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder={placeholder}
+              rows={8}
+              className="w-full p-4 font-mono text-xs text-slate-800 bg-slate-50/50 outline-none resize-y border-0 focus:ring-0 leading-relaxed"
+              style={{ minHeight, maxHeight: "550px" }}
+            />
+          </div>
+        ) : (
+          <div
+            ref={editorRef}
+            contentEditable
+            suppressContentEditableWarning
+            onPaste={handlePaste}
+            onInput={handleInput}
+            onKeyUp={checkActiveStates}
+            onMouseUp={checkActiveStates}
+            data-placeholder={placeholder}
+            className="rich-text-editor-content p-4 outline-none text-sm text-navy-950 empty:before:content-[attr(data-placeholder)] empty:before:text-slate-400 empty:before:pointer-events-none"
+            style={{
+              minHeight,
+              maxHeight: "550px",
+              overflowY: "auto",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+            }}
+          />
+        )}
       </div>
     </div>
   );

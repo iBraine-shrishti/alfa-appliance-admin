@@ -43,6 +43,12 @@
     @apply mx-auto w-full px-4 sm:px-6 lg:px-8;
   }
 
+  .rich-text-editor-content {
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.6;
+  }
+
   .rich-text-editor-content h1 {
     font-size: 1.65rem;
     font-weight: 700;
@@ -51,6 +57,7 @@
     color: #0b1424;
     line-height: 1.25;
   }
+
   .rich-text-editor-content h2 {
     font-size: 1.35rem;
     font-weight: 700;
@@ -104,5 +111,21 @@
   .rich-text-editor-content a {
     color: #2563eb;
     text-decoration: underline;
+  }
+  .rich-text-editor-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0;
+    font-size: 0.875rem;
+  }
+  .rich-text-editor-content th,
+  .rich-text-editor-content td {
+    border: 1px solid #cbd5e1;
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+  .rich-text-editor-content th {
+    background-color: #f1f5f9;
+    font-weight: 600;
   }
 }
