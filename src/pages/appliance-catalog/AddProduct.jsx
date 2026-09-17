@@ -133,7 +133,7 @@ const AddProduct = () => {
         });
         mainImgUrl = validGallery
           ? (typeof validGallery === "string" ? validGallery : validGallery.url)
-          : `${BACKEND_DOMAIN}/media/products/product1/product1.png`;
+          : `https://res.cloudinary.com/sxjn81jw/image/upload/v1789620577/products/product1/product1.png`;
       }
 
       // Filter out any unsaved temporary blob: items from gallery

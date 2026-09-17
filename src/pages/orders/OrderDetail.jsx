@@ -73,7 +73,7 @@ const OrderDetail = () => {
               {itemsList.map((item, idx) => (
                 <div key={item.id || idx} className="flex flex-col gap-5 rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-4 sm:flex-row sm:items-center">
                   <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white text-cyan-300 shadow-lg shadow-blue-950/15">
-                    <img src={item.product?.image_display_url || `${BACKEND_DOMAIN}/media/products/product1/product1.png`} alt={item.product?.title || "Appliance"} className="relative h-full w-full object-contain p-2" />
+                    <img src={item.product?.image_display_url || "https://res.cloudinary.com/sxjn81jw/image/upload/v1789620529/alfa_appliances/products/product1/product1.png"} alt={item.product?.title || "Appliance"} className="relative h-full w-full object-contain p-2" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-lg font-extrabold tracking-tight text-navy-950">{item.product?.title || "Appliance Item"}</p>

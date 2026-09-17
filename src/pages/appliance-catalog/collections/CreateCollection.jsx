@@ -29,7 +29,7 @@ const CreateCollection = () => {
         title: form.title.trim(),
         slug: slugify(form.title),
         description: form.description || "Curated collection of precision home appliances.",
-        image_url: `${BACKEND_DOMAIN}/media/collections/1-Washing_Machines.png`
+        image_url: "https://res.cloudinary.com/sxjn81jw/image/upload/v1789620504/alfa_appliances/collections/1-Washing_Machines.png"
       });
       navigate("/admin/appliance-catalog/collections");
     } catch (err) {

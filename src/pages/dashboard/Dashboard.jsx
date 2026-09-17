@@ -74,7 +74,7 @@ const Dashboard = () => {
     revenue: `£${o.total_price}`,
     unitsSold: o.items?.[0]?.quantity || 1,
     progress: Math.max(30, 100 - idx * 25),
-    image: o.items?.[0]?.product?.image_display_url || `${BACKEND_DOMAIN}/media/products/product1/product1.png`
+    image: o.items?.[0]?.product?.image_display_url || "https://res.cloudinary.com/sxjn81jw/image/upload/v1789620529/alfa_appliances/products/product1/product1.png"
   })) : [
     {
       rank: 1,
@@ -82,7 +82,7 @@ const Dashboard = () => {
       revenue: "£1,498.00",
       unitsSold: 2,
       progress: 100,
-      image: `${BACKEND_DOMAIN}/media/products/product1/product1.png`,
+      image: "https://res.cloudinary.com/sxjn81jw/image/upload/v1789620529/alfa_appliances/products/product1/product1.png",
     },
     {
       rank: 2,
@@ -90,7 +90,7 @@ const Dashboard = () => {
       revenue: "£890.00",
       unitsSold: 2,
       progress: 75,
-      image: `${BACKEND_DOMAIN}/media/products/product2/product2.png`,
+      image: "https://res.cloudinary.com/sxjn81jw/image/upload/v1789620531/alfa_appliances/products/product2/product2.png",
     },
     {
       rank: 3,
@@ -98,7 +98,7 @@ const Dashboard = () => {
       revenue: "£609.00",
       unitsSold: 1,
       progress: 50,
-      image: `${BACKEND_DOMAIN}/media/products/product3/product3.png`,
+      image: "https://res.cloudinary.com/sxjn81jw/image/upload/v1789620533/alfa_appliances/products/product3/product3.png",
     },
   ];
 

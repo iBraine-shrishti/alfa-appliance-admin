@@ -204,7 +204,7 @@ export const fetchAdminOrders = async () => {
       const firstItem = o.items && o.items.length > 0 ? o.items[0] : null;
       const imgUrl = firstItem?.product?.image_display_url 
         ? formatImageUrl(firstItem.product.image_display_url)
-        : `${BACKEND_DOMAIN}/media/products/product1/product1.png`;
+        : "https://res.cloudinary.com/sxjn81jw/image/upload/v1789620529/alfa_appliances/products/product1/product1.png";
       const totalVal = parseFloat(o.total_price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       return {
         id: `#ORD-${o.id}`,
