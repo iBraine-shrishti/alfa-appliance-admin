@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiEye, FiTrash2 } from "react-icons/fi";
 import StatusBadge from "../../StatusBadge";
 import Pagination from "../../Pagination";
+import { getStorefrontProductUrl } from "../../../services/api";
 
 const STATUS_TONE = { "On Sale": "blue", Active: "slate", "Out of Stock": "amber" };
 
@@ -27,11 +28,13 @@ const ProductsTable = ({ products, page, totalPages, totalEntries, pageSize, onP
             {products.map((product) => (
               <tr key={product.id} className="border-b border-slate-50 last:border-0 hover:bg-slate-50/50">
                 <td className="px-5 py-4">
-                  <div className="flex h-30 w-30 items-center justify-center overflow-hidden rounded bg-slate-100"><img src={product.image} alt={product.name} className="h-full w-full object-cover p-1" /></div>
+                  <div className="flex h-30 w-30 items-center justify-center overflow-hidden rounded bg-slate-100">
+                    <img src={product.image} alt={product.name} className="h-full w-full object-contain p-1" />
+                  </div>
                 </td>
                 <td className="px-5 py-4">
                   <p className="font-bold text-navy-950">{product.name}</p>
-                  <p className="text-xs text-slate-400">URL: /{product.id}</p>
+                  <p className="text-xs text-slate-400">URL: /{product.slug || product.id}</p>
                 </td>
                 <td className="px-5 py-4">
                   <span className="inline-block rounded bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
@@ -57,10 +60,20 @@ const ProductsTable = ({ products, page, totalPages, totalEntries, pageSize, onP
                 </td>
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
+                    <a
+                      href={getStorefrontProductUrl(product)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-slate-400 hover:text-blue-600 transition-colors"
+                      aria-label="View product on storefront"
+                      title="View product on storefront"
+                    >
+                      <FiEye size={16} />
+                    </a>
                     <button
                       type="button"
                       onClick={() => navigate(`/admin/appliance-catalog/edit-product/${product.id}`)}
-                      className="text-slate-400 hover:text-blue-600"
+                      className="text-slate-400 hover:text-blue-600 transition-colors"
                       aria-label="Edit product"
                       title="Edit product"
                     >
@@ -69,7 +82,7 @@ const ProductsTable = ({ products, page, totalPages, totalEntries, pageSize, onP
                     <button
                       type="button"
                       onClick={() => onDeleteProduct && onDeleteProduct(product.id)}
-                      className="text-slate-400 hover:text-red-600"
+                      className="text-slate-400 hover:text-red-600 transition-colors"
                       aria-label="Delete product"
                       title="Delete product"
                     >
