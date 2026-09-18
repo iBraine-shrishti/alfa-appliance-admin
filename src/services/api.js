@@ -2,6 +2,19 @@
 export const BACKEND_DOMAIN = "https://alfa-appliances-backend.onrender.com";
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `${BACKEND_DOMAIN}/api`;
 
+export const STOREFRONT_URL =
+  import.meta.env.VITE_STOREFRONT_URL ||
+  (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ? "http://localhost:5173"
+    : "https://alfa-appliance.vercel.app");
+
+export const getStorefrontProductUrl = (product) => {
+  if (!product) return STOREFRONT_URL;
+  const slugOrId = product.slug || product.id;
+  const base = STOREFRONT_URL.replace(/\/+$/, "");
+  return `${base}/product/${slugOrId}`;
+};
+
 export const formatImageUrl = (imageUrl) => {
   if (!imageUrl) return "/placeholder-appliance.png";
   if (typeof imageUrl === "string" && (imageUrl.includes("127.0.0.1:8000") || imageUrl.includes("localhost:8000"))) {
@@ -54,6 +67,7 @@ export const fetchAdminProducts = async (params = {}) => {
     const data = await res.json();
     return data.map((p) => ({
       id: p.id,
+      slug: p.slug,
       name: p.title,
       category: p.category_name || "General",
       brand: p.brand_name || "Alfa",
