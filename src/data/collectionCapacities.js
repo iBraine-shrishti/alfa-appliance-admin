@@ -17,12 +17,7 @@ export const COLLECTION_CAPACITIES = {
     "10.5 kg Wash / 7 kg Dry",
     "11 kg Wash / 7 kg Dry",
   ],
-  "Tumble Dryers": [
-    "7 kg",
-    "8 kg",
-    "9 kg",
-    "10 kg",
-  ],
+  "Tumble Dryers": ["7 kg", "8 kg", "9 kg", "10 kg"],
   "Fridge Freezers": [
     "230 Litres (150L Fridge / 80L Freezer)",
     "260 Litres (180L Fridge / 80L Freezer)",
@@ -33,14 +28,14 @@ export const COLLECTION_CAPACITIES = {
     "530 Litres (American Style)",
     "600+ Litres (Multi-Door American)",
   ],
-  "Fridges": [
+  Fridges: [
     "130 Litres (Under Counter)",
     "150 Litres (Larder)",
     "240 Litres (Tall Larder)",
     "310 Litres (Tall Larder)",
     "390 Litres (Tall Larder)",
   ],
-  "Freezers": [
+  Freezers: [
     "95 Litres (Under Counter)",
     "150 Litres (Tall Upright)",
     "200 Litres (Tall Upright)",
@@ -54,7 +49,7 @@ export const COLLECTION_CAPACITIES = {
     "292 Litres (Large)",
     "380 Litres (Extra Large)",
   ],
-  "Cookers": [
+  Cookers: [
     "55 Litres (Single Cavity)",
     "60 Litres (Single Oven)",
     "65 Litres (Main Oven)",
@@ -62,7 +57,7 @@ export const COLLECTION_CAPACITIES = {
     "105 Litres (Range Cooker)",
     "115 Litres (Range Cooker)",
   ],
-  "Ovens": [
+  Ovens: [
     "65 Litres",
     "70 Litres",
     "71 Litres",
@@ -70,11 +65,18 @@ export const COLLECTION_CAPACITIES = {
     "76 Litres",
     "100 Litres (Double Oven)",
   ],
-  "Hobs": [
+  Hobs: [
     "4 Zones (60cm)",
     "5 Zones (75cm)",
     "5 Zones (90cm)",
     "6 Zones (90cm)",
+  ],
+  "Cooker Hoods / Extractor Fans": [
+    "350 m³/h (60cm)",
+    "450 m³/h (60cm)",
+    "600 m³/h (70cm / 90cm)",
+    "650 m³/h (High Extraction)",
+    "800 m³/h (Island Hood)",
   ],
   "Cooker Hoods": [
     "350 m³/h (60cm)",
@@ -95,18 +97,9 @@ export const COLLECTION_CAPACITIES = {
     "10 Place Settings",
     "11 Place Settings",
   ],
-  "Kettles": [
-    "1.5 Litres",
-    "1.7 Litres (Standard)",
-    "1.8 Litres",
-    "2.0 Litres",
-  ],
-  "Toasters": [
-    "2 Slice",
-    "4 Slice",
-    "4 Slice (Long Slot)",
-  ],
-  "Microwaves": [
+  Kettles: ["1.5 Litres", "1.7 Litres (Standard)", "1.8 Litres", "2.0 Litres"],
+  Toasters: ["2 Slice", "4 Slice", "4 Slice (Long Slot)"],
+  Microwaves: [
     "20 Litres",
     "23 Litres",
     "25 Litres",
@@ -123,7 +116,7 @@ export const COLLECTION_CAPACITIES = {
     "9.0 Litres (Dual Basket)",
     "11 Litres (Air Fryer Oven)",
   ],
-  "Hoovers": [
+  Hoovers: [
     "0.6 Litres (Cordless Stick)",
     "0.8 Litres (Cordless Stick)",
     "1.5 Litres (Bagless Cylinder)",
@@ -144,4 +137,29 @@ export const DEFAULT_COMMON_CAPACITIES = [
   "20 Litres",
   "70 Litres",
   "340 Litres",
+];
+
+// Industry standard common colours and finishes for domestic appliances
+export const COMMON_COLOUR_FINISHES = [
+  "White",
+  "Black",
+  "Stainless Steel",
+  "Silver",
+  "Inox",
+  "Graphite Grey",
+  "Dark Inox",
+  "Black Steel",
+  "Anthracite",
+  "Grey",
+  "Brushed Steel",
+  "Matte Black",
+];
+
+// Industry standard manufacturer guarantees
+export const COMMON_MANUFACTURER_GUARANTEES = [
+  "1 Year",
+  "2 Years",
+  "3 Years",
+  "5 Years",
+  "10 Years",
 ];

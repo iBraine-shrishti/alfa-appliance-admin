@@ -5,6 +5,5 @@ export const applianceCategories = [
   "Refrigeration",
   "Cooking",
   "Dishwashers",
-  "Microwaves",
-  "Ventilation",
+  "Small Appliances",
 ];

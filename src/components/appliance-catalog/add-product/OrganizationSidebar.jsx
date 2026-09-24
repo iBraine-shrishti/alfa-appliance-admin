@@ -4,17 +4,33 @@ import { applianceCategories } from "../../../data/applianceCategories";
 import { productCollectionOptions } from "../../../data/productCollectionOptions";
 import { fetchAdminCollections } from "../../../services/api";
 
+const normalizeCollection = (name) => {
+  if (!name) return "";
+  const trimmed = name.trim();
+  if (trimmed === "Cooker Hoods") return "Cooker Hoods / Extractor Fans";
+  return trimmed;
+};
+
 const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
   const [collectionSearch, setCollectionSearch] = useState("");
-  const [allOptions, setAllOptions] = useState(productCollectionOptions);
+  const [allOptions, setAllOptions] = useState(() => {
+    return Array.from(new Set(productCollectionOptions.map(normalizeCollection))).filter(
+      (opt) => opt !== "Cooker Hoods"
+    );
+  });
 
   useEffect(() => {
     // Attempt to merge live collections from backend with default collection list
     fetchAdminCollections()
       .then((apiCols) => {
         if (apiCols && apiCols.length > 0) {
-          const apiTitles = apiCols.map((c) => c.title || c.name).filter(Boolean);
-          const merged = Array.from(new Set([...apiTitles, ...productCollectionOptions]));
+          const apiTitles = apiCols
+            .map((c) => normalizeCollection(c.title || c.name))
+            .filter(Boolean);
+          const normalizedDefaults = productCollectionOptions.map(normalizeCollection);
+          const merged = Array.from(new Set([...apiTitles, ...normalizedDefaults])).filter(
+            (opt) => opt !== "Cooker Hoods"
+          );
           setAllOptions(merged);
         }
       })

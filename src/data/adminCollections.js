@@ -30,7 +30,7 @@ export const adminCollections = [
   { slug: "cookers", title: "Cookers", image: collection8, productCount: 45 },
   { slug: "ovens", title: "Ovens", image: collection9, productCount: 30 },
   { slug: "hobs", title: "Hobs", image: collection10, productCount: 21 },
-  { slug: "cooker-hoods", title: "Cooker Hoods", image: collection11, productCount: 19 },
+  { slug: "cooker-hoods", title: "Cooker Hoods / Extractor Fans", image: collection11, productCount: 19 },
   { slug: "full-size-dishwashers", title: "Full Size Dishwashers (60cm)", image: collection12, productCount: 24 },
   { slug: "slimline-dishwashers", title: "Slimline Dishwashers (45cm)", image: collection13, productCount: 14 },
   { slug: "kettles", title: "Kettles", image: collection14, productCount: 34 },
