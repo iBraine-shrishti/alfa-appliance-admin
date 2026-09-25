@@ -2,11 +2,41 @@ import { useState, useEffect, useMemo } from "react";
 import { FiChevronDown, FiSearch } from "react-icons/fi";
 import { applianceCategories } from "../../../data/applianceCategories";
 import { productCollectionOptions } from "../../../data/productCollectionOptions";
-import { fetchAdminCollections } from "../../../services/api";
+import { fetchAdminCollections, fetchAdminBrands } from "../../../services/api";
+
+const DEFAULT_BRANDS = [
+  "Bosch",
+  "Beko",
+  "Samsung",
+  "LG",
+  "Hotpoint",
+  "Indesit",
+  "Hisense",
+  "Miele",
+  "Haier",
+  "Hoover",
+  "Neff",
+  "Siemens",
+  "Zanussi",
+  "Smeg",
+  "Belling",
+  "Rangemaster",
+  "Fridgemaster",
+  "Leisure",
+  "Teknix",
+  "Electrolux",
+  "AEG",
+  "Whirlpool",
+  "KitchenAid",
+  "Dualit",
+  "Panasonic",
+  "Alfa",
+];
 
 const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
   const [collectionSearch, setCollectionSearch] = useState("");
   const [allOptions, setAllOptions] = useState(productCollectionOptions);
+  const [brandOptions, setBrandOptions] = useState(DEFAULT_BRANDS);
 
   useEffect(() => {
     // Attempt to merge live collections from backend with default collection list
@@ -21,6 +51,19 @@ const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
       .catch(() => {
         // Fallback already set to productCollectionOptions
       });
+
+    // Fetch live brands from backend
+    fetchAdminBrands()
+      .then((apiBrands) => {
+        if (apiBrands && apiBrands.length > 0) {
+          const apiNames = apiBrands.map((b) => b.name).filter(Boolean);
+          const merged = Array.from(new Set([...apiNames, ...DEFAULT_BRANDS])).sort((a, b) =>
+            a.localeCompare(b)
+          );
+          setBrandOptions(merged);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const filteredCollections = useMemo(() => {
@@ -36,6 +79,28 @@ const OrganizationSidebar = ({ form, onChange, onToggleCollection }) => {
       <p className="mb-5 text-sm font-bold text-navy-950">Organization</p>
 
       <div className="flex flex-col gap-5">
+        <div>
+          <label className="mb-2 block text-xs font-bold tracking-wider text-slate-500">Brand</label>
+          <div className="relative">
+            <select
+              value={form.brand || ""}
+              onChange={(e) => onChange("brand", e.target.value)}
+              className="w-full appearance-none rounded border border-slate-200 bg-white px-3.5 py-3 text-sm text-navy-950 outline-none focus:border-blue-600"
+            >
+              <option value="">Auto-detect from title / slug</option>
+              {brandOptions.map((b) => (
+                <option key={b} value={b}>
+                  {b}
+                </option>
+              ))}
+            </select>
+            <FiChevronDown className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+          </div>
+          <p className="mt-1 text-[11px] text-slate-400">
+            {form.brand ? `Selected: ${form.brand}` : "Will auto-detect from product title or slug if left empty"}
+          </p>
+        </div>
+
         <div>
           <label className="mb-2 block text-xs font-bold tracking-wider text-slate-500">Category</label>
           <div className="relative">

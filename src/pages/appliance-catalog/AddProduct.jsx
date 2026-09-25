@@ -20,6 +20,7 @@ const slugify = (text) =>
 const INITIAL_FORM = {
   title: "",
   slug: "",
+  brand: "",
   description: "",
   bigDescription: "",
   instagramReel: "",
@@ -55,6 +56,7 @@ const AddProduct = () => {
             setForm({
               title: data.title || "",
               slug: data.slug || slugify(data.title || ""),
+              brand: data.brand_name || (typeof data.brand === 'object' ? data.brand?.name : data.brand) || "",
               description: data.description || "",
               bigDescription: data.long_description || data.description || "",
               instagramReel: data.instagram_reel || "",
@@ -163,6 +165,7 @@ const AddProduct = () => {
         energy_rating: "5 Star",
         inverter_technology: true,
         category: form.category,
+        brand: form.brand || undefined,
         collections: form.collections,
         gallery: cleanGallery,
       };
