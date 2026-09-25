@@ -22,7 +22,7 @@ const TopSellingFeatured = ({ product, onEdit }) => {
 
       <div className="relative bg-gradient-to-t from-navy-950 via-navy-950/90 to-transparent px-6 py-6">
         <h3 className="text-lg font-bold text-white">{product.name}</h3>
-        <p className="mt-1 text-xl font-extrabold text-white">${product.price}</p>
+        <p className="mt-1 text-xl font-extrabold text-white">£{product.price}</p>
         <button
           type="button"
           onClick={onEdit}
