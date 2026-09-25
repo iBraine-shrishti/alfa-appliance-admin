@@ -4,6 +4,7 @@ import { FiSearch, FiPlus } from "react-icons/fi";
 import PageHeader from "../../../components/PageHeader";
 import CollectionCard from "../../../components/appliance-catalog/collections/CollectionCard";
 import { fetchAdminCollections } from "../../../services/api";
+import { adminCollections } from "../../../data/adminCollections";
 
 const AllCollections = () => {
   const [search, setSearch] = useState("");
@@ -12,9 +13,18 @@ const AllCollections = () => {
 
   const loadCollections = async () => {
     setLoading(true);
-    const data = await fetchAdminCollections();
-    setCollections(data);
-    setLoading(false);
+    try {
+      const data = await fetchAdminCollections();
+      if (data && data.length > 0) {
+        setCollections(data);
+      } else {
+        setCollections(adminCollections);
+      }
+    } catch {
+      setCollections(adminCollections);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -59,7 +69,7 @@ const AllCollections = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filtered.map((collection) => (
           <CollectionCard key={collection.slug || collection.id} collection={collection} />
         ))}
