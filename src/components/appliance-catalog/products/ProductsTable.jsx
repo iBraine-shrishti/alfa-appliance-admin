@@ -52,6 +52,11 @@ const ProductsTable = ({
                   </div>
                 </td>
                 <td className="px-5 py-4">
+                  {product.brand && (
+                    <span className="mb-1 inline-block rounded bg-blue-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-700">
+                      {product.brand}
+                    </span>
+                  )}
                   <p className="font-bold text-navy-950">{product.name}</p>
                   <p className="text-xs text-slate-400">
                     URL: /{product.slug || product.id}

@@ -57,7 +57,7 @@ const TopSellingGridItem = ({ spot, product, onMoveUp, onMoveDown, onRemove, onA
       </div>
 
       <p className="mt-3 text-sm font-semibold text-navy-950">{product.name}</p>
-      <p className="mt-1 text-sm font-bold text-blue-600">${product.price}</p>
+      <p className="mt-1 text-sm font-bold text-blue-600">£{product.price}</p>
     </div>
   );
 };

@@ -208,7 +208,20 @@ export const fetchCollectionProducts = async (slug) => {
   }
 };
 
-// 5. Orders Management
+// 5. Brands Management
+export const fetchAdminBrands = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/brands/`);
+    if (!res.ok) throw new Error("Failed to fetch brands");
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error("Fetch brands API error:", error);
+    return [];
+  }
+};
+
+// 6. Orders Management
 export const fetchAdminOrders = async () => {
   try {
     const res = await fetch(`${API_BASE_URL}/orders/`);
